@@ -17,7 +17,7 @@ pub type zvmc_host_context = ::std::os::raw::c_void;
 
 impl Default for zvmc_address {
     fn default() -> Self {
-        zvmc_address { bytes: [0u8; 20] }
+        zvmc_address { bytes: [0u8; 24] }
     }
 }
 
@@ -37,7 +37,7 @@ mod tests {
     fn container_new() {
         // TODO: add other checks from test/unittests/test_helpers.cpp
         assert_eq!(size_of::<zvmc_bytes32>(), 32);
-        assert_eq!(size_of::<zvmc_address>(), 20);
+        assert_eq!(size_of::<zvmc_address>(), 24);
         assert!(size_of::<zvmc_vm>() <= 64);
     }
 }

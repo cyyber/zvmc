@@ -63,8 +63,8 @@ import (
 // stored in big-endian byte order.
 type Hash [32]byte
 
-// Address represents the 160-bit (20 bytes) address of an Ethereum account.
-type Address [20]byte
+// Address represents the 192-bit (24 bytes) address of a Zond account.
+type Address [24]byte
 
 // Static asserts.
 const (

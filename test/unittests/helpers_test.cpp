@@ -9,7 +9,7 @@
 // Compile time checks:
 
 static_assert(sizeof(zvmc_bytes32) == 32, "zvmc_bytes32 is too big");
-static_assert(sizeof(zvmc_address) == 20, "zvmc_address is too big");
+static_assert(sizeof(zvmc_address) == 24, "zvmc_address is too big");
 static_assert(sizeof(zvmc_vm) <= 64, "zvmc_vm does not fit cache line");
 static_assert(offsetof(zvmc_message, value) % sizeof(size_t) == 0,
               "zvmc_message.value not aligned");

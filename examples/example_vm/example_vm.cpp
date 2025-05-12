@@ -132,7 +132,7 @@ inline zvmc_uint256be to_uint256(uint32_t x)
     return value;
 }
 
-/// Creates 256-bit value out of an 160-bit address.
+/// Creates 256-bit value out of an 192-bit address.
 inline zvmc_uint256be to_uint256(zvmc_address address)
 {
     zvmc_uint256be value = {};
@@ -148,7 +148,7 @@ inline uint32_t to_uint32(zvmc_uint256be value)
            (uint32_t{value.bytes[30]} << 8) | (uint32_t{value.bytes[31]});
 }
 
-/// Truncates 256-bit value to 160-bit address.
+/// Truncates 256-bit value to 192-bit address.
 inline zvmc_address to_address(zvmc_uint256be value)
 {
     zvmc_address address = {};

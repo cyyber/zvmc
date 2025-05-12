@@ -37,8 +37,8 @@ protected:
 
     example_vm() noexcept
     {
-        msg.sender = "Z5000000000000000000000000000000000000005"_address;
-        msg.recipient = "Zd00000000000000000000000000000000000000d"_address;
+        msg.sender = "Z500000000000000000000000000000000000000000000005"_address;
+        msg.recipient = "Zd0000000000000000000000000000000000000000000000d"_address;
     }
 
     zvmc::Result execute_in_example_vm(int64_t gas,
@@ -154,7 +154,7 @@ TEST_F(example_vm, call)
     EXPECT_EQ(host.recorded_calls[0].value,
               0x0000000000000000000000000000000000000000000000000000000000000003_bytes32);
     EXPECT_EQ(host.recorded_calls[0].recipient,
-              "Z0000000000000000000000000000000000000003"_address);
+              "Z000000000000000000000000000000000000000000000003"_address);
     EXPECT_EQ(host.recorded_calls[0].input_size, size_t{3});
 }
 
