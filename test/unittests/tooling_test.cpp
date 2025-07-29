@@ -1,3 +1,7 @@
+// EVMC: Ethereum Client-VM Connector API.
+// Copyright 2020 The EVMC Authors.
+// Licensed under the Apache License, Version 2.0.
+
 #include "examples/example_vm/example_vm.h"
 #include <qrvmc/hex.hpp>
 #include <qrvmc/tooling.hpp>
