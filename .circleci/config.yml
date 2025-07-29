@@ -328,10 +328,10 @@ workflows:
       - build-cmake-min
       - build-macos
       - build-windows
-      - upload-docs:
-          requires:
-            - lint
-          filters:
-            branches:
-              only:
-                - master
+      # - upload-docs:
+      #     requires:
+      #       - lint
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
