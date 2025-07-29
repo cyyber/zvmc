@@ -1,5 +1,5 @@
-# QRVMC: QRL Client-VM Connector API.
-# Copyright 2016 The QRVMC Authors.
+# EVMC: Ethereum Client-VM Connector API.
+# Copyright 2016 The EVMC Authors.
 # Licensed under the Apache License, Version 2.0.
 
 cmake_minimum_required(VERSION 3.16...3.24)
