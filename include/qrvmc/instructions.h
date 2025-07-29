@@ -178,7 +178,7 @@ enum qrvmc_opcode
 };
 
 /**
- * Metrics for an QRVM 1 instruction.
+ * Metrics for a QRVM 1 instruction.
  *
  * Small integer types are used here to make the tables of metrics smaller.
  */

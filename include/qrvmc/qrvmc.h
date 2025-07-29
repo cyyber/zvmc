@@ -88,7 +88,7 @@ enum qrvmc_flags
 };
 
 /**
- * The message describing an QRVM call, including a zero-depth calls from a transaction origin.
+ * The message describing a QRVM call, including a zero-depth calls from a transaction origin.
  *
  * Most of the fields are modelled by the section 8. Message Call of the Ethereum Yellow Paper.
  */
@@ -211,7 +211,7 @@ struct qrvmc_host_context;
 /**
  * Get transaction context callback function.
  *
- *  This callback function is used by an QRVM to retrieve the transaction and
+ *  This callback function is used by a QRVM to retrieve the transaction and
  *  block context.
  *
  *  @param      context  The pointer to the Host execution context.
@@ -246,7 +246,7 @@ typedef qrvmc_bytes32 (*qrvmc_get_block_hash_fn)(struct qrvmc_host_context* cont
  * to the caller. They MAY be handled by the Client in predefined manner
  * (see e.g. ::QRVMC_REJECTED), otherwise internal errors are not recoverable.
  * The generic representant of errors is ::QRVMC_INTERNAL_ERROR but
- * an QRVM implementation MAY return negative status codes that are not defined
+ * a QRVM implementation MAY return negative status codes that are not defined
  * in the QRVMC documentation.
  *
  * @note
@@ -353,7 +353,7 @@ enum qrvmc_status_code
      *
      * This error SHOULD be used to signal that the QRVM is not able to or
      * willing to execute the given code type or message.
-     * If an QRVM returns the ::QRVMC_REJECTED status code,
+     * If a QRVM returns the ::QRVMC_REJECTED status code,
      * the Client MAY try to execute it in other QRVM implementation.
      * For example, the Client tries running a code in the QRVM 1.5. If the
      * code is not supported there, the execution falls back to the QRVM 1.0.
@@ -660,7 +660,7 @@ typedef qrvmc_bytes32 (*qrvmc_get_code_hash_fn)(struct qrvmc_host_context* conte
 /**
  * Copy code callback function.
  *
- * This callback function is used by an QRVM to request a copy of the code
+ * This callback function is used by a QRVM to request a copy of the code
  * of the given account to the memory buffer provided by the QRVM.
  * The Client MUST copy the requested code, starting with the given offset,
  * to the provided memory buffer up to the size of the buffer or the size of
@@ -683,8 +683,8 @@ typedef size_t (*qrvmc_copy_code_fn)(struct qrvmc_host_context* context,
 /**
  * Log callback function.
  *
- * This callback function is used by an QRVM to inform about a LOG that happened
- * during an QRVM bytecode execution.
+ * This callback function is used by a QRVM to inform about a LOG that happened
+ * during a QRVM bytecode execution.
  *
  * @param context       The pointer to the Host execution context. See ::qrvmc_host_context.
  * @param address       The address of the contract that generated the log.
@@ -1011,7 +1011,7 @@ struct qrvmc_vm
 /**
  * Example of a function creating an instance of an example QRVM implementation.
  *
- * Each QRVM implementation MUST provide a function returning an QRVM instance.
+ * Each QRVM implementation MUST provide a function returning a QRVM instance.
  * The function SHOULD be named `qrvmc_create_<vm-name>(void)`. If the VM name contains hyphens
  * replaces them with underscores in the function names.
  *

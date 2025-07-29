@@ -4,7 +4,7 @@
 
 //! Rust bindings for QRVMC (QRL Client-VM Connector API).
 //!
-//! Have a look at qrvmc-declare to declare an QRVMC compatible VM.
+//! Have a look at qrvmc-declare to declare a QRVMC compatible VM.
 //! This crate documents how to use certain data types.
 
 #![allow(clippy::not_unsafe_ptr_arg_deref, clippy::too_many_arguments)]

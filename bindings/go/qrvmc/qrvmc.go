@@ -63,7 +63,7 @@ import (
 // stored in big-endian byte order.
 type Hash [32]byte
 
-// Address represents the 160-bit (20 bytes) address of an Ethereum account.
+// Address represents the 160-bit (20 bytes) address of a QRL account.
 type Address [20]byte
 
 // Static asserts.

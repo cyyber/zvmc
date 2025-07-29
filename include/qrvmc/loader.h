@@ -84,7 +84,7 @@ enum qrvmc_loader_error_code
  * It is safe to call this function with the same filename argument multiple times
  * (the DLL is not going to be loaded multiple times).
  *
- * @param filename    The null terminated path (absolute or relative) to an QRVMC module
+ * @param filename    The null terminated path (absolute or relative) to a QRVMC module
  *                    (dynamically loaded library) containing the VM implementation.
  *                    If the value is NULL, an empty C-string or longer than the path maximum length
  *                    the ::QRVMC_LOADER_INVALID_ARGUMENT is signaled.
@@ -107,7 +107,7 @@ qrvmc_create_fn qrvmc_load(const char* filename, enum qrvmc_loader_error_code* e
  * the DLL is not going to be loaded multiple times, but the function will return new VM instance
  * each time.
  *
- * @param filename    The null terminated path (absolute or relative) to an QRVMC module
+ * @param filename    The null terminated path (absolute or relative) to a QRVMC module
  *                    (dynamically loaded library) containing the VM implementation.
  *                    If the value is NULL, an empty C-string or longer than the path maximum length
  *                    the ::QRVMC_LOADER_INVALID_ARGUMENT is signaled.

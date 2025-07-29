@@ -243,7 +243,7 @@ pub fn qrvmc_declare_vm(args: TokenStream, item: TokenStream) -> TokenStream {
     quoted.into()
 }
 
-/// Generate tokens for the static data associated with an QRVMC VM.
+/// Generate tokens for the static data associated with a QRVMC VM.
 fn build_static_data(names: &VMNameSet, metadata: &VMMetaData) -> proc_macro2::TokenStream {
     // Stitch together the VM name and the suffix _NAME
     let static_name_ident = names.get_caps_as_ident_append("_NAME");
@@ -334,7 +334,7 @@ fn build_set_option_fn(names: &VMNameSet) -> proc_macro2::TokenStream {
     }
 }
 
-/// Takes an identifier and struct definition, builds an qrvmc_create_* function for FFI.
+/// Takes an identifier and struct definition, builds a qrvmc_create_* function for FFI.
 fn build_create_fn(names: &VMNameSet) -> proc_macro2::TokenStream {
     let type_ident = names.get_type_as_ident();
     let fn_ident = names.get_lowercase_as_ident_prepend("qrvmc_create_");

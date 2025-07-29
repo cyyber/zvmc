@@ -3,7 +3,7 @@
 // Licensed under the Apache License, Version 2.0.
 
 /// @file
-/// Example implementation of an QRVMC Host.
+/// Example implementation of a QRVMC Host.
 
 #include "example_host.h"
 
