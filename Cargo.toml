@@ -1,8 +1,0 @@
-[workspace]
-members = [
-    "bindings/rust/qrvmc-sys",
-    "bindings/rust/qrvmc-vm",
-    "bindings/rust/qrvmc-declare",
-    "bindings/rust/qrvmc-declare-tests",
-    "examples/example-rust-vm"
-]
