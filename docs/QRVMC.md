@@ -47,18 +47,6 @@ API changes are allowed when required to fix a broken feature.
 - [QRVMC VM Tester](@ref vmtester)
    – the QRVMC-compatibility testing tool for VM implementations.
 
-
-# Language bindings {#bindings}
-
-## Go
-
-```go
-import "github.com/theQRL/qrvmc/bindings/go/qrvmc"
-```
-
-@addtogroup QRVMC
-
-
 ## Terms
 
 1. **VM** – A Quantum Resistant Virtual Machine instance/implementation.

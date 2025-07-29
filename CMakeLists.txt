@@ -121,9 +121,6 @@ set(
     /\\\\.idea/
     /build/
     /cmake-build-.*/
-    /bindings/
-    /Cargo.lock
-    /Cargo.toml
     /target/
 )
 cable_add_archive_package()
