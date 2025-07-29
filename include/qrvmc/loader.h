@@ -115,7 +115,8 @@ qrvmc_create_fn qrvmc_load(const char* filename, enum qrvmc_loader_error_code* e
  *                    ::QRVMC_LOADER_SUCCESS on success or any other error code as described above.
  * @return            The pointer to the created VM or NULL in case of error.
  */
-struct qrvmc_vm* qrvmc_load_and_create(const char* filename, enum qrvmc_loader_error_code* error_code);
+struct qrvmc_vm* qrvmc_load_and_create(const char* filename,
+                                       enum qrvmc_loader_error_code* error_code);
 
 /**
  * Dynamically loads the QRVMC module, then creates and configures the VM instance.
@@ -152,7 +153,7 @@ struct qrvmc_vm* qrvmc_load_and_create(const char* filename, enum qrvmc_loader_e
  * @return            The pointer to the created VM or NULL in case of error.
  */
 struct qrvmc_vm* qrvmc_load_and_configure(const char* config,
-                                        enum qrvmc_loader_error_code* error_code);
+                                          enum qrvmc_loader_error_code* error_code);
 
 /**
  * Returns the human-readable message describing the most recent error

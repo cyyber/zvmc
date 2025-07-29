@@ -160,12 +160,12 @@ inline qrvmc_address to_address(qrvmc_uint256be value)
 
 /// The example implementation of the qrvmc_vm::execute() method.
 qrvmc_result execute(qrvmc_vm* instance,
-                    const qrvmc_host_interface* host,
-                    qrvmc_host_context* context,
-                    enum qrvmc_revision /*rev*/,
-                    const qrvmc_message* msg,
-                    const uint8_t* code,
-                    size_t code_size)
+                     const qrvmc_host_interface* host,
+                     qrvmc_host_context* context,
+                     enum qrvmc_revision /*rev*/,
+                     const qrvmc_message* msg,
+                     const uint8_t* code,
+                     size_t code_size)
 {
     auto* vm = static_cast<ExampleVM*>(instance);
 
@@ -382,7 +382,7 @@ qrvmc_result execute(qrvmc_vm* instance,
 
 ExampleVM::ExampleVM()
   : qrvmc_vm{QRVMC_ABI_VERSION, "example_vm",       PROJECT_VERSION, ::destroy,
-            ::execute,        ::get_capabilities, ::set_option}
+             ::execute,         ::get_capabilities, ::set_option}
 {}
 }  // namespace
 

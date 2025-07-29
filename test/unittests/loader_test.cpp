@@ -57,8 +57,8 @@ protected:
     static void destroy(qrvmc_vm* /*vm*/) noexcept { ++destroy_count; }
 
     static qrvmc_set_option_result set_option(qrvmc_vm* /*vm*/,
-                                             const char* name,
-                                             const char* value) noexcept
+                                              const char* name,
+                                              const char* value) noexcept
     {
         recorded_options.push_back({name, value});  // NOLINT
 
@@ -269,12 +269,8 @@ TEST_F(loader, load_eee_bbb)
 TEST_F(loader, load_windows_path)
 {
     auto paths = {
-        "./eee-bbb.qrvm",
-        ".\\eee-bbb.qrvm",
-        "./unittests/eee-bbb.dll",
-        "./unittests\\eee-bbb.dll",
-        ".\\unittests\\eee-bbb.dll",
-        ".\\unittests/eee-bbb.dll",
+        "./eee-bbb.qrvm",           ".\\eee-bbb.qrvm",           "./unittests/eee-bbb.dll",
+        "./unittests\\eee-bbb.dll", ".\\unittests\\eee-bbb.dll", ".\\unittests/eee-bbb.dll",
         "unittests\\eee-bbb.dll",
     };
 
@@ -319,7 +315,8 @@ TEST_F(loader, load_symbol_not_found)
         qrvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
         EXPECT_TRUE(qrvmc_load(qrvmc_test_library_path, &ec) == nullptr);
         EXPECT_EQ(ec, QRVMC_LOADER_SYMBOL_NOT_FOUND);
-        EXPECT_EQ(qrvmc_last_error_msg(), "QRVMC create function not found in " + std::string(path));
+        EXPECT_EQ(qrvmc_last_error_msg(),
+                  "QRVMC create function not found in " + std::string(path));
         EXPECT_TRUE(qrvmc_last_error_msg() == nullptr);
         EXPECT_TRUE(qrvmc_load(qrvmc_test_library_path, nullptr) == nullptr);
     }

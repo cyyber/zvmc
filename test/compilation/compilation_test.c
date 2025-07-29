@@ -7,5 +7,5 @@
 #include <qrvmc/helpers.h>
 #include <qrvmc/instructions.h>
 #include <qrvmc/loader.h>
-#include <qrvmc/utils.h>
 #include <qrvmc/qrvmc.h>
+#include <qrvmc/utils.h>

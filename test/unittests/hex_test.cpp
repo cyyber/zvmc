@@ -140,7 +140,7 @@ TEST(hex, from_prefixed_hex_to_custom_type)
         return qrvmc::hex({qrvmc::from_prefixed_hex<X>(in, "Q").value().bytes, sizeof(X)});
     };
     static_assert(qrvmc::from_prefixed_hex<X>("Q01", "Q").value().bytes[3] == 0x01);  // Works in
-                                                                                     // constexpr.
+                                                                                      // constexpr.
     EXPECT_EQ(test("Q01020304"), "01020304");
     EXPECT_EQ(test("Q010203"), "00010203");
     EXPECT_EQ(test("Q0102"), "00000102");

@@ -42,8 +42,8 @@ protected:
     }
 
     qrvmc::Result execute_in_example_vm(int64_t gas,
-                                       const char* code_hex,
-                                       const char* input_hex = "")
+                                        const char* code_hex,
+                                        const char* input_hex = "")
     {
         const auto code = qrvmc::from_hex(code_hex).value();
         const auto input = qrvmc::from_hex(input_hex).value();

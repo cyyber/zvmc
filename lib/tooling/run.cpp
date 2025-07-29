@@ -4,8 +4,8 @@
 
 #include <qrvmc/hex.hpp>
 #include <qrvmc/mocked_host.hpp>
-#include <qrvmc/tooling.hpp>
 #include <qrvmc/qrvmc.hpp>
+#include <qrvmc/tooling.hpp>
 #include <chrono>
 #include <ostream>
 

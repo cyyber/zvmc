@@ -49,12 +49,12 @@ qrvmc_result not_implemented()
 }
 
 qrvmc_result execute(qrvmc_vm* /*vm*/,
-                    const qrvmc_host_interface* /*host*/,
-                    qrvmc_host_context* /*context*/,
-                    enum qrvmc_revision /*rev*/,
-                    const qrvmc_message* msg,
-                    const uint8_t* /*code*/,
-                    size_t /*code_size*/)
+                     const qrvmc_host_interface* /*host*/,
+                     qrvmc_host_context* /*context*/,
+                     enum qrvmc_revision /*rev*/,
+                     const qrvmc_message* msg,
+                     const uint8_t* /*code*/,
+                     size_t /*code_size*/)
 {
     // The EIP-1352 (https://eips.ethereum.org/EIPS/eip-1352) defines
     // the range 0 - Zffff (2 bytes) of addresses reserved for precompiled contracts.

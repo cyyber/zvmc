@@ -166,8 +166,8 @@ public:
 
     /// Set the account's storage value (QRVMC Host method).
     qrvmc_storage_status set_storage(const address& addr,
-                                    const bytes32& key,
-                                    const bytes32& value) noexcept override
+                                     const bytes32& key,
+                                     const bytes32& value) noexcept override
     {
         record_account_access(addr);
 

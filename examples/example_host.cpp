@@ -57,7 +57,7 @@ public:
     }
 
     qrvmc::bytes32 get_storage(const qrvmc::address& addr,
-                              const qrvmc::bytes32& key) const noexcept final
+                               const qrvmc::bytes32& key) const noexcept final
     {
         const auto account_iter = accounts.find(addr);
         if (account_iter == accounts.end())
@@ -70,8 +70,8 @@ public:
     }
 
     qrvmc_storage_status set_storage(const qrvmc::address& addr,
-                                    const qrvmc::bytes32& key,
-                                    const qrvmc::bytes32& value) noexcept final
+                                     const qrvmc::bytes32& key,
+                                     const qrvmc::bytes32& value) noexcept final
     {
         auto& account = accounts[addr];
         auto prev_value = account.storage[key];
@@ -162,7 +162,7 @@ public:
     }
 
     qrvmc_access_status access_storage(const qrvmc::address& addr,
-                                      const qrvmc::bytes32& key) noexcept final
+                                       const qrvmc::bytes32& key) noexcept final
     {
         (void)addr;
         (void)key;

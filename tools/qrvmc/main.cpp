@@ -20,7 +20,7 @@ qrvmc::bytes load_from_hex(const std::string& str)
         const auto path = str.substr(1);
         std::ifstream file{path};
         auto out = qrvmc::from_spaced_hex(std::istreambuf_iterator<char>{file},
-                                         std::istreambuf_iterator<char>{});
+                                          std::istreambuf_iterator<char>{});
         if (!out)
             throw std::invalid_argument{"invalid hex in " + path};
         return out.value();

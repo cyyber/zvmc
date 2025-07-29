@@ -87,16 +87,16 @@ TEST_F(qrvmc_vm_test, execute_create)
 {
     qrvmc::MockedHost mockedHost;
     const qrvmc_message msg{QRVMC_CREATE,
-                           0,
-                           0,
-                           65536,
-                           qrvmc_address{},
-                           qrvmc_address{},
-                           nullptr,
-                           0,
-                           qrvmc_uint256be{},
-                           qrvmc_bytes32{},
-                           qrvmc_address{}};
+                            0,
+                            0,
+                            65536,
+                            qrvmc_address{},
+                            qrvmc_address{},
+                            nullptr,
+                            0,
+                            qrvmc_uint256be{},
+                            qrvmc_bytes32{},
+                            qrvmc_address{}};
     std::array<uint8_t, 2> code = {{0xfe, 0x00}};
 
     const qrvmc_result result =
@@ -178,16 +178,16 @@ TEST_F(qrvmc_vm_test, precompile_test)
         addr.bytes[19] = static_cast<uint8_t>(i & 0xff);
 
         const qrvmc_message msg{QRVMC_CALL,
-                               0,
-                               0,
-                               65536,
-                               qrvmc_address{},
-                               qrvmc_address{},
-                               nullptr,
-                               0,
-                               qrvmc_uint256be{},
-                               qrvmc_bytes32{},
-                               addr};
+                                0,
+                                0,
+                                65536,
+                                qrvmc_address{},
+                                qrvmc_address{},
+                                nullptr,
+                                0,
+                                qrvmc_uint256be{},
+                                qrvmc_bytes32{},
+                                addr};
 
         const qrvmc_result result =
             vm->execute(vm, nullptr, nullptr, QRVMC_MAX_REVISION, &msg, nullptr, 0);

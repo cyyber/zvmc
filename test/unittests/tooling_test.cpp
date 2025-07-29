@@ -133,8 +133,8 @@ TEST(tool_commands, create_preserve_storage)
     std::ostringstream out;
 
     const auto exit_code =
-        run(vm, QRVMC_SHANGHAI, 200, *from_hex("60bb6000556a6000546000526001601ff3600052600b6015f3"),
-            {}, true, false, out);
+        run(vm, QRVMC_SHANGHAI, 200,
+            *from_hex("60bb6000556a6000546000526001601ff3600052600b6015f3"), {}, true, false, out);
     EXPECT_EQ(exit_code, 0);
     EXPECT_EQ(out.str(), out_pattern("Shanghai", 200, "success", 7, "bb", true));
 }
@@ -144,7 +144,8 @@ TEST(tool_commands, bench_add)
     auto vm = qrvmc::VM{qrvmc_create_example_vm()};
     std::ostringstream out;
 
-    const auto exit_code = run(vm, QRVMC_SHANGHAI, 200, *from_hex("60028001"), {}, false, true, out);
+    const auto exit_code =
+        run(vm, QRVMC_SHANGHAI, 200, *from_hex("60028001"), {}, false, true, out);
     EXPECT_EQ(exit_code, 0);
 
     const auto o = out.str();

@@ -18,7 +18,8 @@ static_assert(offsetof(qrvmc_message, value) % sizeof(size_t) == 0,
 // On GCC/clang the underlying type should be unsigned int, on MSVC int
 static_assert(sizeof(qrvmc_call_kind) == sizeof(int),
               "Enum `qrvmc_call_kind` is not the size of int");
-static_assert(sizeof(qrvmc_revision) == sizeof(int), "Enum `qrvmc_revision` is not the size of int");
+static_assert(sizeof(qrvmc_revision) == sizeof(int),
+              "Enum `qrvmc_revision` is not the size of int");
 
 static constexpr size_t optionalDataSize =
     sizeof(qrvmc_result) - offsetof(qrvmc_result, create_address);

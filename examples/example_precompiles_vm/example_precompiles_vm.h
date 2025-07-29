@@ -3,8 +3,8 @@
 // Licensed under the Apache License, Version 2.0.
 #pragma once
 
-#include <qrvmc/utils.h>
 #include <qrvmc/qrvmc.h>
+#include <qrvmc/utils.h>
 
 #ifdef __cplusplus
 extern "C" {
