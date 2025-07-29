@@ -20,8 +20,6 @@ include(CablePackage)
 include(CMakeDependentOption)
 include(CMakePackageConfigHelpers)
 
-option(QRVMC_JAVA "Enable building Java Native Interface (JNI) bindings" OFF)
-
 option(QRVMC_INSTALL "Enable QRVMC installation (e.g. make install)" ON)
 
 option(QRVMC_TESTING "Build everything (libraries, tools, examples, internal tests)" OFF)
@@ -81,10 +79,6 @@ endif()
 set(QRVMC_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 
 add_subdirectory(lib)
-
-if(QRVMC_JAVA)
-    add_subdirectory(bindings/java)
-endif()
 
 if(QRVMC_TOOLS)
     add_subdirectory(tools)

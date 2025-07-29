@@ -24,10 +24,8 @@ Please visit the [documentation].
 | **C++**                       | C++17                | GCC 8+, clang 9+, MSVC 2017+ | Host- and VM-side |
 | **Go** _(bindings)_           | 1.11+ (with modules) |                              | Host-side only    |
 | **Rust** _(bindings)_[¹](#n1) | 2018 edition         | 1.47.0 and newer             | VM-side only      |
-| **Java** _(bindings)_[²](#n2) | 11                   |                              | Host-side only    |
 
 1. <sup id="n1">↑</sup> Rust support is limited and not complete yet, but it is mostly functional already. Breaking changes are possible at this stage.
-2. <sup id="n2">↑</sup> Java support is in progress and the interface remains in flux. Breaking changes are possible at this stage.
 
 ### Testing tools
 
