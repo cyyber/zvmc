@@ -859,7 +859,7 @@ enum qrvmc_revision
      *
      * https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md
      */
-    QRVMC_SHANGHAI = 11,
+    QRVMC_SHANGHAI = 1,
 
     /** The maximum QRVM revision supported. */
     QRVMC_MAX_REVISION = QRVMC_SHANGHAI,
