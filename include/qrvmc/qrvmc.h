@@ -919,7 +919,7 @@ enum qrvmc_capabilities
      *
      * This capability is **experimental** and MAY be removed without notice.
      */
-    QRVMC_CAPABILITY_PRECOMPILES = (1u << 1)
+    QRVMC_CAPABILITY_PRECOMPILES = (1u << 2)
 };
 
 /**
