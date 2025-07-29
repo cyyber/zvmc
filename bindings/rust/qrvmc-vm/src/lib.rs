@@ -13,8 +13,8 @@ mod container;
 mod types;
 
 pub use container::QrvmcContainer;
-pub use types::*;
 pub use qrvmc_sys as ffi;
+pub use types::*;
 
 /// Trait QRVMC VMs have to implement.
 pub trait QrvmcVm {
@@ -216,7 +216,10 @@ impl ExecutionMessage {
 }
 
 impl<'a> ExecutionContext<'a> {
-    pub fn new(host: &'a ffi::qrvmc_host_interface, _context: *mut ffi::qrvmc_host_context) -> Self {
+    pub fn new(
+        host: &'a ffi::qrvmc_host_interface, 
+        _context: *mut ffi::qrvmc_host_context
+    ) -> Self {
         let _tx_context = unsafe {
             assert!((*host).get_tx_context.is_some());
             (*host).get_tx_context.unwrap()(_context)

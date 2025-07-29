@@ -2,13 +2,13 @@
 // Copyright 2019 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 
-use std::collections::HashMap;
 use qrvmc_declare::qrvmc_declare_vm;
 use qrvmc_vm::ExecutionContext;
 use qrvmc_vm::ExecutionMessage;
 use qrvmc_vm::ExecutionResult;
-use qrvmc_vm::SetOptionError;
 use qrvmc_vm::QrvmcVm;
+use qrvmc_vm::SetOptionError;
+use std::collections::HashMap;
 
 #[qrvmc_declare_vm("Foo VM", "qrvm", "1.42-alpha.gamma.starship")]
 pub struct FooVM {

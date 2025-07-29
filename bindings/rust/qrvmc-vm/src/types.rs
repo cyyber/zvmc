@@ -60,7 +60,10 @@ mod tests {
             MessageKind::QRVMC_DELEGATECALL,
             ffi::qrvmc_call_kind::QRVMC_DELEGATECALL
         );
-        assert_eq!(MessageKind::QRVMC_CREATE, ffi::qrvmc_call_kind::QRVMC_CREATE);
+        assert_eq!(
+            MessageKind::QRVMC_CREATE, 
+            ffi::qrvmc_call_kind::QRVMC_CREATE
+        );
     }
 
     #[test]
@@ -106,6 +109,9 @@ mod tests {
 
     #[test]
     fn revision() {
-        assert_eq!(Revision::QRVMC_SHANGHAI, ffi::qrvmc_revision::QRVMC_SHANGHAI);
+        assert_eq!(
+            Revision::QRVMC_SHANGHAI, 
+            ffi::qrvmc_revision::QRVMC_SHANGHAI
+        );
     }
 }
