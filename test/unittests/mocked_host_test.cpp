@@ -74,7 +74,7 @@ TEST(mocked_host, storage)
 
 TEST(mocked_host, storage_update_scenarios)
 {
-    static constexpr auto addr = "Zff"_address;
+    static constexpr auto addr = "Qff"_address;
     static constexpr auto key = 0xfe_bytes32;
 
     static constexpr auto execute_scenario = [](const qrvmc::bytes32& original,
