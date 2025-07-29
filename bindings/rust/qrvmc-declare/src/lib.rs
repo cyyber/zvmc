@@ -160,7 +160,7 @@ impl VMMetaData {
             for capability in capabilities_list_pruned.split(',') {
                 match capability {
                     "qrvm" => ret |= 1,
-                    "precompiles" => ret |= 1 << 1,
+                    "precompiles" => ret |= 1 << 2,
                     _ => panic!("Invalid capability specified."),
                 }
             }
