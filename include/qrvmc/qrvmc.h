@@ -320,7 +320,7 @@ enum qrvmc_status_code
 
     /**
      * Contract validation has failed (e.g. due to QRVM 1.5 jump validity,
-     * Casper's purity checker or zwasm contract rules).
+     * Casper's purity checker).
      */
     QRVMC_CONTRACT_VALIDATION_FAILURE = 13,
 
@@ -909,11 +909,6 @@ enum qrvmc_capabilities
     QRVMC_CAPABILITY_QRVM1 = (1u << 0),
 
     /**
-     * The VM is capable of executing zwasm bytecode.
-     */
-    QRVMC_CAPABILITY_ZWASM = (1u << 1),
-
-    /**
      * The VM is capable of executing the precompiled contracts
      * defined for the range of code addresses.
      *
@@ -923,7 +918,7 @@ enum qrvmc_capabilities
      *
      * This capability is **experimental** and MAY be removed without notice.
      */
-    QRVMC_CAPABILITY_PRECOMPILES = (1u << 2)
+    QRVMC_CAPABILITY_PRECOMPILES = (1u << 1)
 };
 
 /**

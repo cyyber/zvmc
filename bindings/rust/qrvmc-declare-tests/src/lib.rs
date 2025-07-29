@@ -10,7 +10,7 @@ use qrvmc_vm::ExecutionResult;
 use qrvmc_vm::SetOptionError;
 use qrvmc_vm::QrvmcVm;
 
-#[qrvmc_declare_vm("Foo VM", "zwasm, qrvm", "1.42-alpha.gamma.starship")]
+#[qrvmc_declare_vm("Foo VM", "qrvm", "1.42-alpha.gamma.starship")]
 pub struct FooVM {
     options: HashMap<String, String>,
 }

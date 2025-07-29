@@ -162,7 +162,6 @@ type Capability uint32
 
 const (
 	CapabilityQRVM1 Capability = C.QRVMC_CAPABILITY_QRVM1
-	CapabilityZWASM Capability = C.QRVMC_CAPABILITY_ZWASM
 )
 
 func (vm *VM) HasCapability(capability Capability) bool {

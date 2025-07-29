@@ -13,7 +13,7 @@
 //!
 //! # Example
 //! ```
-//! #[qrvmc_declare::qrvmc_declare_vm("This is an example VM name", "zwasm, qrvm", "1.2.3-custom")]
+//! #[qrvmc_declare::qrvmc_declare_vm("This is an example VM name", "qrvm", "1.2.3-custom")]
 //! pub struct ExampleVM;
 //!
 //! impl qrvmc_vm::QrvmcVm for ExampleVM {
@@ -160,8 +160,7 @@ impl VMMetaData {
             for capability in capabilities_list_pruned.split(',') {
                 match capability {
                     "qrvm" => ret |= 1,
-                    "zwasm" => ret |= 1 << 1,
-                    "precompiles" => ret |= 1 << 2,
+                    "precompiles" => ret |= 1 << 1,
                     _ => panic!("Invalid capability specified."),
                 }
             }

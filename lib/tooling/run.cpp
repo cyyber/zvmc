@@ -14,7 +14,7 @@ namespace qrvmc::tooling
 namespace
 {
 /// The address where a new contract is created with --create option.
-constexpr auto create_address = "Zc9ea7ed000000000000000000000000000000001"_address;
+constexpr auto create_address = "Qc9ea7ed000000000000000000000000000000001"_address;
 
 /// The gas limit for contract creation.
 constexpr auto create_gas = 10'000'000;

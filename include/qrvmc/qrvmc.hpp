@@ -306,7 +306,7 @@ constexpr T parse(std::string_view s, std::string_view prefix) noexcept
 /// Literal for qrvmc::address.
 constexpr address operator""_address(const char* s, size_t) noexcept
 {
-    return parse<address>(s, "Z");
+    return parse<address>(s, "Q");
 }
 
 /// Literal for qrvmc::bytes32.

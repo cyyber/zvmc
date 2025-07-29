@@ -18,7 +18,7 @@ TEST(mocked_host, mocked_account)
 TEST(mocked_host, storage)
 {
     const auto addr1 = qrvmc::address{};
-    const auto addr2 = "Z2000000000000000000000000000000000000000"_address;
+    const auto addr2 = "Q2000000000000000000000000000000000000000"_address;
     const auto val1 = qrvmc::bytes32{};
     const auto val2 = 0x2000000000000000000000000000000000000000000000000102030405060708_bytes32;
     const auto val3 = 0x1000000000000000000000000000000000000000000000000000000000000000_bytes32;

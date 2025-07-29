@@ -2,7 +2,7 @@
 
 **ABI version 10**
 
-The QRVMC is the low-level ABI between Quantum Resistant Virtual Machines (QRVMs) and QRL Clients. On the QRVM-side it supports classic QRVM1 and [zwasm].
+The QRVMC is the low-level ABI between Quantum Resistant Virtual Machines (QRVMs) and QRL Clients. On the QRVM-side it supports classic QRVM1.
 On the Client-side it defines the interface for QRVM implementations
 to access QRL environment and state.
 
@@ -56,11 +56,8 @@ API changes are allowed when required to fix a broken feature.
 import "github.com/theQRL/qrvmc/bindings/go/qrvmc"
 ```
 
-
-[zwasm]: https://github.com/zwasm/design
-
-
 @addtogroup QRVMC
+
 
 ## Terms
 

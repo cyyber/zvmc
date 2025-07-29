@@ -42,9 +42,8 @@ TEST_F(qrvmc_vm_test, version)
 
 TEST_F(qrvmc_vm_test, capabilities)
 {
-    // The VM should have at least one of QRVM1 or ZWASM capabilities.
+    // The VM should have at least one of QRVM1 or PRECOMPILES capabilities.
     EXPECT_TRUE(qrvmc_vm_has_capability(vm, QRVMC_CAPABILITY_QRVM1) ||
-                qrvmc_vm_has_capability(vm, QRVMC_CAPABILITY_ZWASM) ||
                 qrvmc_vm_has_capability(vm, QRVMC_CAPABILITY_PRECOMPILES));
 }
 
