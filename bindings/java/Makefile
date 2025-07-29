@@ -23,7 +23,7 @@ BUILD_DIR = $(OUT_DIR)/_cmake_build
 lint: gradlew
 	./gradlew --no-daemon clean spotlessCheck
 
-build: gradlew java/src/test/resources/libexample-vm.$(EXTENSION) java/src/main/resources/libzvmc-java.$(EXTENSION)
+build: gradlew java/src/test/resources/libexample-vm.$(EXTENSION) java/src/main/resources/libqrvmc-java.$(EXTENSION)
 	mkdir -p ./java/build
 	./gradlew --no-daemon clean spotlessApply build
 
@@ -33,16 +33,16 @@ test: build
 gradlew:
 	gradle --no-daemon setup
 
-$(OUT_DIR)/lib/libexample-vm.$(EXTENSION): $(OUT_DIR)/lib/libzvmc-java.$(EXTENSION)
+$(OUT_DIR)/lib/libexample-vm.$(EXTENSION): $(OUT_DIR)/lib/libqrvmc-java.$(EXTENSION)
 
-$(OUT_DIR)/lib/libzvmc-java.$(EXTENSION):
+$(OUT_DIR)/lib/libqrvmc-java.$(EXTENSION):
 	mkdir -p $(BUILD_DIR)
-	(cd $(BUILD_DIR) && cmake $(SOURCE_DIR) -DCMAKE_INSTALL_PREFIX=$(OUT_DIR) -DZVMC_JAVA=ON -DJAVA_HOME=$(JAVA_HOME) -DZVMC_EXAMPLES=ON)
+	(cd $(BUILD_DIR) && cmake $(SOURCE_DIR) -DCMAKE_INSTALL_PREFIX=$(OUT_DIR) -DQRVMC_JAVA=ON -DJAVA_HOME=$(JAVA_HOME) -DQRVMC_EXAMPLES=ON)
 	cmake --build $(OUT_DIR)/_cmake_build --target install
 
-java/src/main/resources/libzvmc-java.$(EXTENSION): $(OUT_DIR)/lib/libzvmc-java.$(EXTENSION)
+java/src/main/resources/libqrvmc-java.$(EXTENSION): $(OUT_DIR)/lib/libqrvmc-java.$(EXTENSION)
 	mkdir -p java/src/main/resources
-	cp $(OUT_DIR)/lib/libzvmc-java.$(EXTENSION) java/src/main/resources/libzvmc-java.$(EXTENSION)
+	cp $(OUT_DIR)/lib/libqrvmc-java.$(EXTENSION) java/src/main/resources/libqrvmc-java.$(EXTENSION)
 
 java/src/test/resources/libexample-vm.$(EXTENSION): $(OUT_DIR)/lib/libexample-vm.$(EXTENSION)
 	mkdir -p java/src/test/resources

@@ -1,7 +1,7 @@
 // EVMC: Ethereum Client-VM Connector API.
 // Copyright 2019-2020 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
-package org.theqrl.zvmc;
+package org.theqrl.qrvmc;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

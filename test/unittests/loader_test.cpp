@@ -2,9 +2,9 @@
 // Copyright 2018 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 
-#include <zvmc/helpers.h>
-#include <zvmc/loader.h>
-#include <zvmc/zvmc.h>
+#include <qrvmc/helpers.h>
+#include <qrvmc/loader.h>
+#include <qrvmc/qrvmc.h>
 #include <gtest/gtest.h>
 #include <cstring>
 #include <unordered_map>
@@ -64,10 +64,10 @@ protected:
 
         auto it = supported_options.find(name);
         if (it == supported_options.end())
-            return ZVMC_SET_OPTION_INVALID_NAME;
+            return QRVMC_SET_OPTION_INVALID_NAME;
 
         if (std::find(std::begin(it->second), std::end(it->second), value) != std::end(it->second))
-            return ZVMC_SET_OPTION_SUCCESS;
+            return QRVMC_SET_OPTION_SUCCESS;
 
         if (name == option_name_causing_unknown_error)
         {
@@ -77,14 +77,14 @@ protected:
 #pragma GCC diagnostic pop
         }
 
-        return ZVMC_SET_OPTION_INVALID_VALUE;
+        return QRVMC_SET_OPTION_INVALID_VALUE;
     }
 
     /// Creates a VM mock with only destroy() method.
     static zvmc_vm* create_vm_barebone()
     {
         static auto instance =
-            zvmc_vm{ZVMC_ABI_VERSION, "vm_barebone", "", destroy, nullptr, nullptr, nullptr};
+            zvmc_vm{QRVMC_ABI_VERSION, "vm_barebone", "", destroy, nullptr, nullptr, nullptr};
         ++create_count;
         return &instance;
     }
@@ -93,7 +93,7 @@ protected:
     static zvmc_vm* create_vm_with_wrong_abi()
     {
         constexpr auto wrong_abi_version = 1985;
-        static_assert(wrong_abi_version != ZVMC_ABI_VERSION);
+        static_assert(wrong_abi_version != QRVMC_ABI_VERSION);
         static auto instance =
             zvmc_vm{wrong_abi_version, "", "", destroy, nullptr, nullptr, nullptr};
         ++create_count;
@@ -104,7 +104,7 @@ protected:
     static zvmc_vm* create_vm_with_set_option() noexcept
     {
         static auto instance = zvmc_vm{
-            ZVMC_ABI_VERSION, "vm_with_set_option", "", destroy, nullptr, nullptr, set_option};
+            QRVMC_ABI_VERSION, "vm_with_set_option", "", destroy, nullptr, nullptr, set_option};
         ++create_count;
         return &instance;
     }
@@ -161,21 +161,21 @@ TEST_F(loader, strcpy_sx)
 TEST_F(loader, load_nonexistent)
 {
     constexpr auto path = "nonexistent";
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     EXPECT_TRUE(zvmc_load(path, &ec) == nullptr);
-    EXPECT_EQ(ec, ZVMC_LOADER_CANNOT_OPEN);
+    EXPECT_EQ(ec, QRVMC_LOADER_CANNOT_OPEN);
     EXPECT_TRUE(zvmc_load(path, nullptr) == nullptr);
 }
 
 TEST_F(loader, load_long_path)
 {
     const std::string path(5000, 'a');
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     EXPECT_TRUE(zvmc_load(path.c_str(), &ec) == nullptr);
     EXPECT_STREQ(zvmc_last_error_msg(),
                  "invalid argument: file name is too long (5000, maximum allowed length is 4096)");
     EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
-    EXPECT_EQ(ec, ZVMC_LOADER_INVALID_ARGUMENT);
+    EXPECT_EQ(ec, QRVMC_LOADER_INVALID_ARGUMENT);
     EXPECT_TRUE(zvmc_load(path.c_str(), nullptr) == nullptr);
     EXPECT_STREQ(zvmc_last_error_msg(),
                  "invalid argument: file name is too long (5000, maximum allowed length is 4096)");
@@ -184,9 +184,9 @@ TEST_F(loader, load_long_path)
 
 TEST_F(loader, load_null_path)
 {
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     EXPECT_TRUE(zvmc_load(nullptr, &ec) == nullptr);
-    EXPECT_EQ(ec, ZVMC_LOADER_INVALID_ARGUMENT);
+    EXPECT_EQ(ec, QRVMC_LOADER_INVALID_ARGUMENT);
     EXPECT_STREQ(zvmc_last_error_msg(), "invalid argument: file name cannot be null");
     EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
     EXPECT_TRUE(zvmc_load(nullptr, nullptr) == nullptr);
@@ -196,11 +196,11 @@ TEST_F(loader, load_null_path)
 
 TEST_F(loader, load_empty_path)
 {
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     EXPECT_TRUE(zvmc_load("", &ec) == nullptr);
     EXPECT_STREQ(zvmc_last_error_msg(), "invalid argument: file name cannot be empty");
     EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
-    EXPECT_EQ(ec, ZVMC_LOADER_INVALID_ARGUMENT);
+    EXPECT_EQ(ec, QRVMC_LOADER_INVALID_ARGUMENT);
     EXPECT_TRUE(zvmc_load("", nullptr) == nullptr);
     EXPECT_STREQ(zvmc_last_error_msg(), "invalid argument: file name cannot be empty");
     EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
@@ -219,9 +219,9 @@ TEST_F(loader, load_aaa)
     for (auto& path : paths)
     {
         setup(path, "zvmc_create_aaa", create_aaa);
-        zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+        zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
         const auto fn = zvmc_load(path, &ec);
-        EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+        EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
         ASSERT_TRUE(fn != nullptr);
         EXPECT_EQ(fn(), expected_vm_ptr);
         EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
@@ -244,9 +244,9 @@ TEST_F(loader, load_file_with_multiple_extensions)
     for (auto& path : paths)
     {
         setup(path, "zvmc_create_aaa", create_aaa);
-        zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+        zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
         const auto fn = zvmc_load(path, &ec);
-        EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+        EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
         ASSERT_TRUE(fn != nullptr);
         EXPECT_EQ(fn(), expected_vm_ptr);
         EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
@@ -256,11 +256,11 @@ TEST_F(loader, load_file_with_multiple_extensions)
 TEST_F(loader, load_eee_bbb)
 {
     setup("unittests/eee-bbb.dll", "zvmc_create_eee_bbb", create_eee_bbb);
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto fn = zvmc_load(zvmc_test_library_path, &ec);
     const auto expected_vm_ptr = reinterpret_cast<zvmc_vm*>(0xeeebbb);
     ASSERT_TRUE(fn != nullptr);
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
     EXPECT_EQ(fn(), expected_vm_ptr);
     EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
 }
@@ -283,16 +283,16 @@ TEST_F(loader, load_windows_path)
         const bool should_open = is_windows || std::strchr(path, '\\') == nullptr;
         setup(should_open ? path : nullptr, "zvmc_create_eee_bbb", create_eee_bbb);
 
-        zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+        zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
         zvmc_load(path, &ec);
         if (should_open)
         {
-            EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+            EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
             EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
         }
         else
         {
-            EXPECT_EQ(ec, ZVMC_LOADER_CANNOT_OPEN);
+            EXPECT_EQ(ec, QRVMC_LOADER_CANNOT_OPEN);
             EXPECT_STREQ(zvmc_last_error_msg(), "cannot load library");
             EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
         }
@@ -316,10 +316,10 @@ TEST_F(loader, load_symbol_not_found)
     {
         setup(path, "zvmc_create_aaa", create_aaa);
 
-        zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+        zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
         EXPECT_TRUE(zvmc_load(zvmc_test_library_path, &ec) == nullptr);
-        EXPECT_EQ(ec, ZVMC_LOADER_SYMBOL_NOT_FOUND);
-        EXPECT_EQ(zvmc_last_error_msg(), "ZVMC create function not found in " + std::string(path));
+        EXPECT_EQ(ec, QRVMC_LOADER_SYMBOL_NOT_FOUND);
+        EXPECT_EQ(zvmc_last_error_msg(), "QRVMC create function not found in " + std::string(path));
         EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
         EXPECT_TRUE(zvmc_load(zvmc_test_library_path, nullptr) == nullptr);
     }
@@ -329,9 +329,9 @@ TEST_F(loader, load_default_symbol)
 {
     setup("default.zvmc", "zvmc_create", create_aaa);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto fn = zvmc_load(zvmc_test_library_path, &ec);
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
     EXPECT_EQ(fn, &create_aaa);
 
     fn = zvmc_load(zvmc_test_library_path, nullptr);
@@ -342,29 +342,29 @@ TEST_F(loader, load_and_create_failure)
 {
     setup("failure.vm", "zvmc_create", create_failure);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto vm = zvmc_load_and_create(zvmc_test_library_path, &ec);
     EXPECT_TRUE(vm == nullptr);
-    EXPECT_EQ(ec, ZVMC_LOADER_VM_CREATION_FAILURE);
-    EXPECT_STREQ(zvmc_last_error_msg(), "creating ZVMC VM of failure.vm has failed");
+    EXPECT_EQ(ec, QRVMC_LOADER_VM_CREATION_FAILURE);
+    EXPECT_STREQ(zvmc_last_error_msg(), "creating QRVMC VM of failure.vm has failed");
     EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
 
     vm = zvmc_load_and_create(zvmc_test_library_path, nullptr);
     EXPECT_TRUE(vm == nullptr);
-    EXPECT_STREQ(zvmc_last_error_msg(), "creating ZVMC VM of failure.vm has failed");
+    EXPECT_STREQ(zvmc_last_error_msg(), "creating QRVMC VM of failure.vm has failed");
 }
 
 TEST_F(loader, load_and_create_abi_mismatch)
 {
     setup("abi1985.vm", "zvmc_create", create_vm_with_wrong_abi);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto vm = zvmc_load_and_create(zvmc_test_library_path, &ec);
     EXPECT_TRUE(vm == nullptr);
-    EXPECT_EQ(ec, ZVMC_LOADER_ABI_VERSION_MISMATCH);
+    EXPECT_EQ(ec, QRVMC_LOADER_ABI_VERSION_MISMATCH);
     const auto expected_error_msg =
-        "ZVMC ABI version 1985 of abi1985.vm mismatches the expected version " +
-        std::to_string(ZVMC_ABI_VERSION);
+        "QRVMC ABI version 1985 of abi1985.vm mismatches the expected version " +
+        std::to_string(QRVMC_ABI_VERSION);
     EXPECT_EQ(zvmc_last_error_msg(), expected_error_msg);
     EXPECT_TRUE(zvmc_last_error_msg() == nullptr);
     EXPECT_EQ(destroy_count, create_count);
@@ -379,18 +379,18 @@ TEST_F(loader, load_and_configure_no_options)
 {
     setup("path", "zvmc_create", create_vm_with_set_option);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto vm = zvmc_load_and_configure("path", &ec);
     EXPECT_TRUE(vm);
     EXPECT_TRUE(recorded_options.empty());
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
 
     setup("path", "zvmc_create", create_vm_barebone);
 
     vm = zvmc_load_and_configure("path,", &ec);
     EXPECT_TRUE(vm);
     EXPECT_TRUE(recorded_options.empty());
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
 }
 
 TEST_F(loader, load_and_configure_single_option)
@@ -400,13 +400,13 @@ TEST_F(loader, load_and_configure_single_option)
 
     setup("path", "zvmc_create", create_vm_with_set_option);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto vm = zvmc_load_and_configure("path,o=1", &ec);
     EXPECT_TRUE(vm);
     ASSERT_EQ(recorded_options.size(), size_t{1});
     EXPECT_EQ(recorded_options[0].first, "o");
     EXPECT_EQ(recorded_options[0].second, "1");
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
 
     recorded_options.clear();
     vm = zvmc_load_and_configure("path,O=2", &ec);
@@ -414,7 +414,7 @@ TEST_F(loader, load_and_configure_single_option)
     ASSERT_EQ(recorded_options.size(), size_t{1});
     EXPECT_EQ(recorded_options[0].first, "O");
     EXPECT_EQ(recorded_options[0].second, "2");
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
 }
 
 TEST_F(loader, load_and_configure_uknown_option)
@@ -423,13 +423,13 @@ TEST_F(loader, load_and_configure_uknown_option)
 
     setup("path", "zvmc_create", create_vm_with_set_option);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto vm = zvmc_load_and_configure("path,z=1", &ec);
     EXPECT_FALSE(vm);
     ASSERT_EQ(recorded_options.size(), size_t{1});
     EXPECT_EQ(recorded_options[0].first, "z");
     EXPECT_EQ(recorded_options[0].second, "1");
-    EXPECT_EQ(ec, ZVMC_LOADER_INVALID_OPTION_NAME);
+    EXPECT_EQ(ec, QRVMC_LOADER_INVALID_OPTION_NAME);
     EXPECT_STREQ(zvmc_last_error_msg(), "vm_with_set_option (path): unknown option 'z'");
     EXPECT_EQ(destroy_count, create_count);
 
@@ -439,7 +439,7 @@ TEST_F(loader, load_and_configure_uknown_option)
     ASSERT_EQ(recorded_options.size(), size_t{1});
     EXPECT_EQ(recorded_options[0].first, "x");
     EXPECT_EQ(recorded_options[0].second, "2");
-    EXPECT_EQ(ec, ZVMC_LOADER_INVALID_OPTION_VALUE);
+    EXPECT_EQ(ec, QRVMC_LOADER_INVALID_OPTION_VALUE);
     EXPECT_STREQ(zvmc_last_error_msg(),
                  "vm_with_set_option (path): unsupported value '2' for option 'x'");
     EXPECT_EQ(destroy_count, create_count);
@@ -453,7 +453,7 @@ TEST_F(loader, load_and_configure_multiple_options)
 
     setup("path", "zvmc_create", create_vm_with_set_option);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto vm = zvmc_load_and_configure("path,a=_a,b=_b1,c=_c,b=_b2", &ec);
     EXPECT_TRUE(vm);
     ASSERT_EQ(recorded_options.size(), size_t{4});
@@ -465,7 +465,7 @@ TEST_F(loader, load_and_configure_multiple_options)
     EXPECT_EQ(recorded_options[2].second, "_c");
     EXPECT_EQ(recorded_options[3].first, "b");
     EXPECT_EQ(recorded_options[3].second, "_b2");
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
 
     recorded_options.clear();
     vm = zvmc_load_and_configure("path,a=_a,b=_b2,a=_c,", &ec);
@@ -477,7 +477,7 @@ TEST_F(loader, load_and_configure_multiple_options)
     EXPECT_EQ(recorded_options[1].second, "_b2");
     EXPECT_EQ(recorded_options[2].first, "a");
     EXPECT_EQ(recorded_options[2].second, "_c");
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
 }
 
 TEST_F(loader, load_and_configure_uknown_option_in_sequence)
@@ -488,7 +488,7 @@ TEST_F(loader, load_and_configure_uknown_option_in_sequence)
 
     setup("path", "zvmc_create", create_vm_with_set_option);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto vm = zvmc_load_and_configure("path,a=_a,b=_b,c=_b,", &ec);
     EXPECT_FALSE(vm);
     ASSERT_EQ(recorded_options.size(), size_t{3});
@@ -498,7 +498,7 @@ TEST_F(loader, load_and_configure_uknown_option_in_sequence)
     EXPECT_EQ(recorded_options[1].second, "_b");
     EXPECT_EQ(recorded_options[2].first, "c");
     EXPECT_EQ(recorded_options[2].second, "_b");
-    EXPECT_EQ(ec, ZVMC_LOADER_INVALID_OPTION_VALUE);
+    EXPECT_EQ(ec, QRVMC_LOADER_INVALID_OPTION_VALUE);
     EXPECT_STREQ(zvmc_last_error_msg(),
                  "vm_with_set_option (path): unsupported value '_b' for option 'c'");
     EXPECT_EQ(destroy_count, create_count);
@@ -511,7 +511,7 @@ TEST_F(loader, load_and_configure_uknown_option_in_sequence)
     EXPECT_EQ(recorded_options[0].second, "_a");
     EXPECT_EQ(recorded_options[1].first, "x");
     EXPECT_EQ(recorded_options[1].second, "_b");
-    EXPECT_EQ(ec, ZVMC_LOADER_INVALID_OPTION_NAME);
+    EXPECT_EQ(ec, QRVMC_LOADER_INVALID_OPTION_NAME);
     EXPECT_STREQ(zvmc_last_error_msg(), "vm_with_set_option (path): unknown option 'x'");
     EXPECT_EQ(destroy_count, create_count);
 }
@@ -523,7 +523,7 @@ TEST_F(loader, load_and_configure_empty_values)
 
     setup("path", "zvmc_create", create_vm_with_set_option);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto vm = zvmc_load_and_configure("path,flag,e=,flag=,e", &ec);
     EXPECT_TRUE(vm);
     ASSERT_EQ(recorded_options.size(), size_t{4});
@@ -535,7 +535,7 @@ TEST_F(loader, load_and_configure_empty_values)
     EXPECT_EQ(recorded_options[2].second, "");
     EXPECT_EQ(recorded_options[3].first, "e");
     EXPECT_EQ(recorded_options[3].second, "");
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
     EXPECT_EQ(create_count, 1);
     EXPECT_EQ(destroy_count, 0);
 }
@@ -546,7 +546,7 @@ TEST_F(loader, load_and_configure_degenerated_names)
 
     setup("path", "zvmc_create", create_vm_with_set_option);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto vm = zvmc_load_and_configure("path,,,=,,=xxx", &ec);
     EXPECT_TRUE(vm);
     ASSERT_EQ(recorded_options.size(), size_t{5});
@@ -560,7 +560,7 @@ TEST_F(loader, load_and_configure_degenerated_names)
     EXPECT_EQ(recorded_options[3].second, "");
     EXPECT_EQ(recorded_options[4].first, "");
     EXPECT_EQ(recorded_options[4].second, "xxx");
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
     zvmc_destroy(vm);
     EXPECT_EQ(destroy_count, create_count);
 }
@@ -573,13 +573,13 @@ TEST_F(loader, load_and_configure_comma_at_the_end)
 
     setup("path", "zvmc_create", create_vm_with_set_option);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto vm = zvmc_load_and_configure("path,x=x,", &ec);
     EXPECT_TRUE(vm);
     ASSERT_EQ(recorded_options.size(), size_t{1});
     EXPECT_EQ(recorded_options[0].first, "x");
     EXPECT_EQ(recorded_options[0].second, "x");
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
     zvmc_destroy(vm);
     EXPECT_EQ(destroy_count, create_count);
 }
@@ -591,18 +591,18 @@ TEST_F(loader, load_and_configure_vm_without_set_option)
 
     setup("path", "zvmc_create", create_vm_barebone);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto vm = zvmc_load_and_configure("path,a=0,b=1", &ec);
     EXPECT_FALSE(vm);
     EXPECT_TRUE(recorded_options.empty());
-    EXPECT_EQ(ec, ZVMC_LOADER_INVALID_OPTION_NAME);
+    EXPECT_EQ(ec, QRVMC_LOADER_INVALID_OPTION_NAME);
     EXPECT_STREQ(zvmc_last_error_msg(), "vm_barebone (path) does not support any options");
     EXPECT_EQ(destroy_count, create_count);
 
     vm = zvmc_load_and_configure("path,", &ec);
     EXPECT_TRUE(vm);
     EXPECT_TRUE(recorded_options.empty());
-    EXPECT_EQ(ec, ZVMC_LOADER_SUCCESS);
+    EXPECT_EQ(ec, QRVMC_LOADER_SUCCESS);
     EXPECT_FALSE(zvmc_last_error_msg());
     zvmc_destroy(vm);
     EXPECT_EQ(destroy_count, create_count);
@@ -610,7 +610,7 @@ TEST_F(loader, load_and_configure_vm_without_set_option)
     vm = zvmc_load_and_configure("path,,", &ec);
     EXPECT_FALSE(vm);
     EXPECT_TRUE(recorded_options.empty());
-    EXPECT_EQ(ec, ZVMC_LOADER_INVALID_OPTION_NAME);
+    EXPECT_EQ(ec, QRVMC_LOADER_INVALID_OPTION_NAME);
     EXPECT_STREQ(zvmc_last_error_msg(), "vm_barebone (path) does not support any options");
     EXPECT_EQ(destroy_count, create_count);
 }
@@ -619,13 +619,13 @@ TEST_F(loader, load_and_configure_config_too_long)
 {
     setup("path", "zvmc_create", create_vm_barebone);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     auto config = std::string{"path,"};
     config.append(10000, 'x');
     auto vm = zvmc_load_and_configure(config.c_str(), &ec);
     EXPECT_FALSE(vm);
     EXPECT_TRUE(recorded_options.empty());
-    EXPECT_EQ(ec, ZVMC_LOADER_INVALID_ARGUMENT);
+    EXPECT_EQ(ec, QRVMC_LOADER_INVALID_ARGUMENT);
     EXPECT_STREQ(zvmc_last_error_msg(),
                  "invalid argument: configuration is too long (maximum allowed length is 4096)");
     EXPECT_EQ(destroy_count, create_count);
@@ -652,14 +652,14 @@ TEST_F(loader, load_and_configure_unknown_set_option_error_code)
 
     setup("path", "zvmc_create", create_vm_with_set_option);
 
-    zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
+    zvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
     const auto config_str = "path," + option_name_causing_unknown_error + "=1";
     auto vm = zvmc_load_and_configure(config_str.c_str(), &ec);
     EXPECT_FALSE(vm);
     ASSERT_EQ(recorded_options.size(), 1u);
     EXPECT_EQ(recorded_options[0].first, option_name_causing_unknown_error);
     EXPECT_EQ(recorded_options[0].second, "1");
-    EXPECT_EQ(ec, ZVMC_LOADER_INVALID_OPTION_VALUE);
+    EXPECT_EQ(ec, QRVMC_LOADER_INVALID_OPTION_VALUE);
     EXPECT_EQ(zvmc_last_error_msg(),
               "vm_with_set_option (path): unknown error when setting value '1' for option '" +
                   option_name_causing_unknown_error + "'");

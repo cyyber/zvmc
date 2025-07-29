@@ -1,8 +1,8 @@
-// EVMC: Ethereum Client-VM Connector API.
-// Copyright 2018 The EVMC Authors.
+// QRVMC: Ethereum Client-VM Connector API.
+// Copyright 2018 The QRVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 
-package zvmc
+package qrvmc
 
 import (
 	"bytes"

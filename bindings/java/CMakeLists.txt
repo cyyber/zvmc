@@ -7,29 +7,29 @@ include(UseJava)
 find_package(Java REQUIRED COMPONENTS Development)
 find_package(JNI REQUIRED)
 
-add_jar(zvmc-jar
-    OUTPUT_NAME zvmc-java
+add_jar(qrvmc-jar
+    OUTPUT_NAME qrvmc-java
     VERSION ${PROJECT_VERSION}
     SOURCES
-    java/src/main/java/org/theqrl/zvmc/ZvmcLoaderException.java
-    java/src/main/java/org/theqrl/zvmc/ZvmcVm.java
-    java/src/main/java/org/theqrl/zvmc/Host.java
-    java/src/main/java/org/theqrl/zvmc/HostContext.java
-    GENERATE_NATIVE_HEADERS zvmc-java-native-headers)
+    java/src/main/java/org/theqrl/qrvmc/QrvmcLoaderException.java
+    java/src/main/java/org/theqrl/qrvmc/QrvmcVm.java
+    java/src/main/java/org/theqrl/qrvmc/Host.java
+    java/src/main/java/org/theqrl/qrvmc/HostContext.java
+    GENERATE_NATIVE_HEADERS qrvmc-java-native-headers)
 
-add_library(zvmc-java SHARED)
-target_sources(zvmc-java PRIVATE
-    c/zvmc-vm.c
+add_library(qrvmc-java SHARED)
+target_sources(qrvmc-java PRIVATE
+    c/qrvmc-vm.c
     c/host.c
     c/host.h)
-target_include_directories(zvmc-java PRIVATE ${JNI_INCLUDE_DIRS})
-target_link_libraries(zvmc-java PRIVATE zvmc-java-native-headers zvmc::zvmc zvmc::loader ${JNI_LIBRARIES})
+target_include_directories(qrvmc-java PRIVATE ${JNI_INCLUDE_DIRS})
+target_link_libraries(qrvmc-java PRIVATE qrvmc-java-native-headers qrvmc::qrvmc qrvmc::loader ${JNI_LIBRARIES})
 
-if(ZVMC_INSTALL)
-    install(TARGETS zvmc-java EXPORT zvmcTargets
+if(QRVMC_INSTALL)
+    install(TARGETS qrvmc-java EXPORT qrvmcTargets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-    install_jar(zvmc-jar DESTINATION ${CMAKE_INSTALL_DATADIR}/java)
+    install_jar(qrvmc-jar DESTINATION ${CMAKE_INSTALL_DATADIR}/java)
 endif()

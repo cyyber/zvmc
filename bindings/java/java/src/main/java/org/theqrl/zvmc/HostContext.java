@@ -1,13 +1,13 @@
 // EVMC: Ethereum Client-VM Connector API.
 // Copyright 2019-2020 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
-package org.theqrl.zvmc;
+package org.theqrl.qrvmc;
 
 import java.nio.ByteBuffer;
 
 /**
  * This interface represents the callback functions must be implemented in order to interface with
- * the ZVM.
+ * the QRVM.
  */
 public interface HostContext {
   /**
@@ -62,7 +62,7 @@ public interface HostContext {
    * <p>This function is used by a VM to update the given account storage entry. The VM MUST make
    * sure that the account exists. This requirement is only a formality because VM implementations
    * only modify storage of the account of the current execution context (i.e. referenced by
-   * zvmc_message::recipient).
+   * qrvmc_message::recipient).
    *
    * @param address The address of the account.
    * @param key The index of the storage entry.
@@ -107,8 +107,8 @@ public interface HostContext {
   /**
    * Copy code function.
    *
-   * <p>This function is used by an ZVM to request a copy of the code of the given account to the
-   * memory buffer provided by the ZVM. The Client MUST copy the requested code, starting with the
+   * <p>This function is used by an QRVM to request a copy of the code of the given account to the
+   * memory buffer provided by the QRVM. The Client MUST copy the requested code, starting with the
    * given offset, to the provided memory buffer up to the size of the buffer or the size of the
    * code, whichever is smaller.
    *
@@ -118,7 +118,7 @@ public interface HostContext {
   ByteBuffer getCode(byte[] address);
 
   /**
-   * This function supports ZVM calls.
+   * This function supports QRVM calls.
    *
    * @param msg The call parameters.
    * @return The result of the call.
@@ -128,7 +128,7 @@ public interface HostContext {
   /**
    * Get transaction context function.
    *
-   * <p>This function is used by an ZVM to retrieve the transaction and block context.
+   * <p>This function is used by an QRVM to retrieve the transaction and block context.
    *
    * @return The transaction context.
    */
@@ -149,7 +149,7 @@ public interface HostContext {
   /**
    * Log function.
    *
-   * <p>This function is used by an ZVM to inform about a LOG that happened during an ZVM bytecode
+   * <p>This function is used by an QRVM to inform about a LOG that happened during an QRVM bytecode
    * execution.
    *
    * @param address The address of the contract that generated the log.

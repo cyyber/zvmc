@@ -3,15 +3,15 @@
 // Licensed under the Apache License, Version 2.0.
 
 use core::str::FromStr;
-use zvmc_declare::zvmc_declare_vm;
-use zvmc_vm::*;
+use qrvmc_declare::qrvmc_declare_vm;
+use qrvmc_vm::*;
 
-#[zvmc_declare_vm("ExampleRustVM", "zvm, precompiles", "10.1.0")]
+#[qrvmc_declare_vm("ExampleRustVM", "qrvm, precompiles", "10.1.0")]
 pub struct ExampleRustVM {
     verbosity: i8,
 }
 
-impl ZvmcVm for ExampleRustVM {
+impl QrvmcVm for ExampleRustVM {
     fn init() -> Self {
         Self { verbosity: 0 }
     }
@@ -49,7 +49,7 @@ impl ZvmcVm for ExampleRustVM {
             println!("execution started");
         }
 
-        if message.kind() != MessageKind::ZVMC_CALL {
+        if message.kind() != MessageKind::QRVMC_CALL {
             return ExecutionResult::failure();
         }
 

@@ -2,11 +2,11 @@
 // Copyright 2018 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 
-#include <zvmc/instructions.h>
+#include <qrvmc/instructions.h>
 #include <gtest/gtest.h>
 
-inline bool operator==(const zvmc_instruction_metrics& a,
-                       const zvmc_instruction_metrics& b) noexcept
+inline bool operator==(const qrvmc_instruction_metrics& a,
+                       const qrvmc_instruction_metrics& b) noexcept
 {
     return a.gas_cost == b.gas_cost && a.stack_height_required == b.stack_height_required &&
            a.stack_height_change == b.stack_height_change;
@@ -14,11 +14,11 @@ inline bool operator==(const zvmc_instruction_metrics& a,
 
 TEST(instructions, name_gas_cost_equivalence)
 {
-    for (auto r = int{ZVMC_SHANGHAI}; r <= ZVMC_MAX_REVISION; ++r)
+    for (auto r = int{QRVMC_SHANGHAI}; r <= QRVMC_MAX_REVISION; ++r)
     {
-        const auto rev = static_cast<zvmc_revision>(r);
-        const auto names = zvmc_get_instruction_names_table(rev);
-        const auto metrics = zvmc_get_instruction_metrics_table(rev);
+        const auto rev = static_cast<qrvmc_revision>(r);
+        const auto names = qrvmc_get_instruction_names_table(rev);
+        const auto metrics = qrvmc_get_instruction_metrics_table(rev);
 
         for (int i = 0; i < 256; ++i)
         {
@@ -35,10 +35,10 @@ TEST(instructions, name_gas_cost_equivalence)
 
 TEST(instructions, shanghai_hard_fork)
 {
-    const auto s = zvmc_get_instruction_metrics_table(ZVMC_SHANGHAI);
-    // const auto p = zvmc_get_instruction_metrics_table(ZVMC_PARIS);
-    const auto sn = zvmc_get_instruction_names_table(ZVMC_SHANGHAI);
-    // const auto pn = zvmc_get_instruction_names_table(ZVMC_PARIS);
+    const auto s = qrvmc_get_instruction_metrics_table(QRVMC_SHANGHAI);
+    // const auto p = qrvmc_get_instruction_metrics_table(QRVMC_PARIS);
+    const auto sn = qrvmc_get_instruction_names_table(QRVMC_SHANGHAI);
+    // const auto pn = qrvmc_get_instruction_names_table(QRVMC_PARIS);
 
     // NOTE(rgeraldes24): unused for now
     // for (int op = 0x00; op <= 0xff; ++op)

@@ -4,17 +4,17 @@
 
 add_library(
     loader STATIC
-    ${ZVMC_INCLUDE_DIR}/zvmc/loader.h
+    ${QRVMC_INCLUDE_DIR}/qrvmc/loader.h
     loader.c
 )
 
-add_library(zvmc::loader ALIAS loader)
+add_library(qrvmc::loader ALIAS loader)
 set_target_properties(loader PROPERTIES
-    OUTPUT_NAME zvmc-loader
+    OUTPUT_NAME qrvmc-loader
     POSITION_INDEPENDENT_CODE TRUE
 )
-target_link_libraries(loader INTERFACE ${CMAKE_DL_LIBS} PUBLIC zvmc::zvmc)
+target_link_libraries(loader INTERFACE ${CMAKE_DL_LIBS} PUBLIC qrvmc::qrvmc)
 
-if(ZVMC_INSTALL)
-    install(TARGETS loader EXPORT zvmcTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+if(QRVMC_INSTALL)
+    install(TARGETS loader EXPORT qrvmcTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()

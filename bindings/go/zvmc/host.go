@@ -1,14 +1,14 @@
-// EVMC: Ethereum Client-VM Connector API.
-// Copyright 2018 The EVMC Authors.
+// QRVMC: Ethereum Client-VM Connector API.
+// Copyright 2018 The QRVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 
-package zvmc
+package qrvmc
 
 /*
 #cgo CFLAGS: -I${SRCDIR}/../../../include -Wall -Wextra -Wno-unused-parameter
 
-#include <zvmc/zvmc.h>
-#include <zvmc/helpers.h>
+#include <qrvmc/qrvmc.h>
+#include <qrvmc/helpers.h>
 
 */
 import "C"
@@ -19,34 +19,34 @@ import (
 type CallKind int
 
 const (
-	Call         CallKind = C.ZVMC_CALL
-	DelegateCall CallKind = C.ZVMC_DELEGATECALL
-	Create       CallKind = C.ZVMC_CREATE
-	Create2      CallKind = C.ZVMC_CREATE2
+	Call         CallKind = C.QRVMC_CALL
+	DelegateCall CallKind = C.QRVMC_DELEGATECALL
+	Create       CallKind = C.QRVMC_CREATE
+	Create2      CallKind = C.QRVMC_CREATE2
 )
 
 type AccessStatus int
 
 const (
-	ColdAccess AccessStatus = C.ZVMC_ACCESS_COLD
-	WarmAccess AccessStatus = C.ZVMC_ACCESS_WARM
+	ColdAccess AccessStatus = C.QRVMC_ACCESS_COLD
+	WarmAccess AccessStatus = C.QRVMC_ACCESS_WARM
 )
 
 type StorageStatus int
 
 const (
-	StorageAssigned         StorageStatus = C.ZVMC_STORAGE_ASSIGNED
-	StorageAdded            StorageStatus = C.ZVMC_STORAGE_ADDED
-	StorageDeleted          StorageStatus = C.ZVMC_STORAGE_DELETED
-	StorageModified         StorageStatus = C.ZVMC_STORAGE_MODIFIED
-	StorageDeletedAdded     StorageStatus = C.ZVMC_STORAGE_DELETED_ADDED
-	StorageModifiedDeleted  StorageStatus = C.ZVMC_STORAGE_MODIFIED_DELETED
-	StorageDeletedRestored  StorageStatus = C.ZVMC_STORAGE_DELETED_RESTORED
-	StorageAddedDeleted     StorageStatus = C.ZVMC_STORAGE_ADDED_DELETED
-	StorageModifiedRestored StorageStatus = C.ZVMC_STORAGE_MODIFIED_RESTORED
+	StorageAssigned         StorageStatus = C.QRVMC_STORAGE_ASSIGNED
+	StorageAdded            StorageStatus = C.QRVMC_STORAGE_ADDED
+	StorageDeleted          StorageStatus = C.QRVMC_STORAGE_DELETED
+	StorageModified         StorageStatus = C.QRVMC_STORAGE_MODIFIED
+	StorageDeletedAdded     StorageStatus = C.QRVMC_STORAGE_DELETED_ADDED
+	StorageModifiedDeleted  StorageStatus = C.QRVMC_STORAGE_MODIFIED_DELETED
+	StorageDeletedRestored  StorageStatus = C.QRVMC_STORAGE_DELETED_RESTORED
+	StorageAddedDeleted     StorageStatus = C.QRVMC_STORAGE_ADDED_DELETED
+	StorageModifiedRestored StorageStatus = C.QRVMC_STORAGE_MODIFIED_RESTORED
 )
 
-func goAddress(in C.zvmc_address) Address {
+func goAddress(in C.qrvmc_address) Address {
 	out := Address{}
 	for i := 0; i < len(out); i++ {
 		out[i] = byte(in.bytes[i])
@@ -54,7 +54,7 @@ func goAddress(in C.zvmc_address) Address {
 	return out
 }
 
-func goHash(in C.zvmc_bytes32) Hash {
+func goHash(in C.qrvmc_bytes32) Hash {
 	out := Hash{}
 	for i := 0; i < len(out); i++ {
 		out[i] = byte(in.bytes[i])
@@ -102,43 +102,43 @@ type HostContext interface {
 }
 
 //export accountExists
-func accountExists(pCtx unsafe.Pointer, pAddr *C.zvmc_address) C.bool {
+func accountExists(pCtx unsafe.Pointer, pAddr *C.qrvmc_address) C.bool {
 	ctx := getHostContext(uintptr(pCtx))
 	return C.bool(ctx.AccountExists(goAddress(*pAddr)))
 }
 
 //export getStorage
-func getStorage(pCtx unsafe.Pointer, pAddr *C.struct_zvmc_address, pKey *C.zvmc_bytes32) C.zvmc_bytes32 {
+func getStorage(pCtx unsafe.Pointer, pAddr *C.struct_qrvmc_address, pKey *C.qrvmc_bytes32) C.qrvmc_bytes32 {
 	ctx := getHostContext(uintptr(pCtx))
-	return zvmcBytes32(ctx.GetStorage(goAddress(*pAddr), goHash(*pKey)))
+	return qrvmcBytes32(ctx.GetStorage(goAddress(*pAddr), goHash(*pKey)))
 }
 
 //export setStorage
-func setStorage(pCtx unsafe.Pointer, pAddr *C.zvmc_address, pKey *C.zvmc_bytes32, pVal *C.zvmc_bytes32) C.enum_zvmc_storage_status {
+func setStorage(pCtx unsafe.Pointer, pAddr *C.qrvmc_address, pKey *C.qrvmc_bytes32, pVal *C.qrvmc_bytes32) C.enum_qrvmc_storage_status {
 	ctx := getHostContext(uintptr(pCtx))
-	return C.enum_zvmc_storage_status(ctx.SetStorage(goAddress(*pAddr), goHash(*pKey), goHash(*pVal)))
+	return C.enum_qrvmc_storage_status(ctx.SetStorage(goAddress(*pAddr), goHash(*pKey), goHash(*pVal)))
 }
 
 //export getBalance
-func getBalance(pCtx unsafe.Pointer, pAddr *C.zvmc_address) C.zvmc_uint256be {
+func getBalance(pCtx unsafe.Pointer, pAddr *C.qrvmc_address) C.qrvmc_uint256be {
 	ctx := getHostContext(uintptr(pCtx))
-	return zvmcBytes32(ctx.GetBalance(goAddress(*pAddr)))
+	return qrvmcBytes32(ctx.GetBalance(goAddress(*pAddr)))
 }
 
 //export getCodeSize
-func getCodeSize(pCtx unsafe.Pointer, pAddr *C.zvmc_address) C.size_t {
+func getCodeSize(pCtx unsafe.Pointer, pAddr *C.qrvmc_address) C.size_t {
 	ctx := getHostContext(uintptr(pCtx))
 	return C.size_t(ctx.GetCodeSize(goAddress(*pAddr)))
 }
 
 //export getCodeHash
-func getCodeHash(pCtx unsafe.Pointer, pAddr *C.zvmc_address) C.zvmc_bytes32 {
+func getCodeHash(pCtx unsafe.Pointer, pAddr *C.qrvmc_address) C.qrvmc_bytes32 {
 	ctx := getHostContext(uintptr(pCtx))
-	return zvmcBytes32(ctx.GetCodeHash(goAddress(*pAddr)))
+	return qrvmcBytes32(ctx.GetCodeHash(goAddress(*pAddr)))
 }
 
 //export copyCode
-func copyCode(pCtx unsafe.Pointer, pAddr *C.zvmc_address, offset C.size_t, p *C.uint8_t, size C.size_t) C.size_t {
+func copyCode(pCtx unsafe.Pointer, pAddr *C.qrvmc_address, offset C.size_t, p *C.uint8_t, size C.size_t) C.size_t {
 	ctx := getHostContext(uintptr(pCtx))
 	code := ctx.GetCode(goAddress(*pAddr))
 	length := C.size_t(len(code))
@@ -158,32 +158,32 @@ func copyCode(pCtx unsafe.Pointer, pAddr *C.zvmc_address, offset C.size_t, p *C.
 }
 
 //export getTxContext
-func getTxContext(pCtx unsafe.Pointer) C.struct_zvmc_tx_context {
+func getTxContext(pCtx unsafe.Pointer) C.struct_qrvmc_tx_context {
 	ctx := getHostContext(uintptr(pCtx))
 
 	txContext := ctx.GetTxContext()
 
-	return C.struct_zvmc_tx_context{
-		zvmcBytes32(txContext.GasPrice),
-		zvmcAddress(txContext.Origin),
-		zvmcAddress(txContext.Coinbase),
+	return C.struct_qrvmc_tx_context{
+		qrvmcBytes32(txContext.GasPrice),
+		qrvmcAddress(txContext.Origin),
+		qrvmcAddress(txContext.Coinbase),
 		C.int64_t(txContext.Number),
 		C.int64_t(txContext.Timestamp),
 		C.int64_t(txContext.GasLimit),
-		zvmcBytes32(txContext.PrevRandao),
-		zvmcBytes32(txContext.ChainID),
-		zvmcBytes32(txContext.BaseFee),
+		qrvmcBytes32(txContext.PrevRandao),
+		qrvmcBytes32(txContext.ChainID),
+		qrvmcBytes32(txContext.BaseFee),
 	}
 }
 
 //export getBlockHash
-func getBlockHash(pCtx unsafe.Pointer, number int64) C.zvmc_bytes32 {
+func getBlockHash(pCtx unsafe.Pointer, number int64) C.qrvmc_bytes32 {
 	ctx := getHostContext(uintptr(pCtx))
-	return zvmcBytes32(ctx.GetBlockHash(number))
+	return qrvmcBytes32(ctx.GetBlockHash(number))
 }
 
 //export emitLog
-func emitLog(pCtx unsafe.Pointer, pAddr *C.zvmc_address, pData unsafe.Pointer, dataSize C.size_t, pTopics unsafe.Pointer, topicsCount C.size_t) {
+func emitLog(pCtx unsafe.Pointer, pAddr *C.qrvmc_address, pData unsafe.Pointer, dataSize C.size_t, pTopics unsafe.Pointer, topicsCount C.size_t) {
 	ctx := getHostContext(uintptr(pCtx))
 
 	// FIXME: Optimize memory copy
@@ -200,7 +200,7 @@ func emitLog(pCtx unsafe.Pointer, pAddr *C.zvmc_address, pData unsafe.Pointer, d
 }
 
 //export call
-func call(pCtx unsafe.Pointer, msg *C.struct_zvmc_message) C.struct_zvmc_result {
+func call(pCtx unsafe.Pointer, msg *C.struct_qrvmc_message) C.struct_qrvmc_result {
 	ctx := getHostContext(uintptr(pCtx))
 
 	kind := CallKind(msg.kind)
@@ -208,9 +208,9 @@ func call(pCtx unsafe.Pointer, msg *C.struct_zvmc_message) C.struct_zvmc_result 
 		goByteSlice(msg.input_data, msg.input_size), int64(msg.gas), int(msg.depth), msg.flags != 0, goHash(msg.create2_salt),
 		goAddress(msg.code_address))
 
-	statusCode := C.enum_zvmc_status_code(0)
+	statusCode := C.enum_qrvmc_status_code(0)
 	if err != nil {
-		statusCode = C.enum_zvmc_status_code(err.(Error))
+		statusCode = C.enum_qrvmc_status_code(err.(Error))
 	}
 
 	outputData := (*C.uint8_t)(nil)
@@ -218,19 +218,19 @@ func call(pCtx unsafe.Pointer, msg *C.struct_zvmc_message) C.struct_zvmc_result 
 		outputData = (*C.uint8_t)(&output[0])
 	}
 
-	result := C.zvmc_make_result(statusCode, C.int64_t(gasLeft), C.int64_t(gasRefund), outputData, C.size_t(len(output)))
-	result.create_address = zvmcAddress(createAddr)
+	result := C.qrvmc_make_result(statusCode, C.int64_t(gasLeft), C.int64_t(gasRefund), outputData, C.size_t(len(output)))
+	result.create_address = qrvmcAddress(createAddr)
 	return result
 }
 
 //export accessAccount
-func accessAccount(pCtx unsafe.Pointer, pAddr *C.zvmc_address) C.enum_zvmc_access_status {
+func accessAccount(pCtx unsafe.Pointer, pAddr *C.qrvmc_address) C.enum_qrvmc_access_status {
 	ctx := getHostContext(uintptr(pCtx))
-	return C.enum_zvmc_access_status(ctx.AccessAccount(goAddress(*pAddr)))
+	return C.enum_qrvmc_access_status(ctx.AccessAccount(goAddress(*pAddr)))
 }
 
 //export accessStorage
-func accessStorage(pCtx unsafe.Pointer, pAddr *C.zvmc_address, pKey *C.zvmc_bytes32) C.enum_zvmc_access_status {
+func accessStorage(pCtx unsafe.Pointer, pAddr *C.qrvmc_address, pKey *C.qrvmc_bytes32) C.enum_qrvmc_access_status {
 	ctx := getHostContext(uintptr(pCtx))
-	return C.enum_zvmc_access_status(ctx.AccessStorage(goAddress(*pAddr), goHash(*pKey)))
+	return C.enum_qrvmc_access_status(ctx.AccessStorage(goAddress(*pAddr), goHash(*pKey)))
 }

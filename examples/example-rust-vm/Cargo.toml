@@ -14,6 +14,6 @@ name = "examplerustvm"
 crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
-zvmc-sys = { path = "../../bindings/rust/zvmc-sys" }
-zvmc-vm = { path = "../../bindings/rust/zvmc-vm" }
-zvmc-declare = { path = "../../bindings/rust/zvmc-declare" }
+qrvmc-sys = { path = "../../bindings/rust/qrvmc-sys" }
+qrvmc-vm = { path = "../../bindings/rust/qrvmc-vm" }
+qrvmc-declare = { path = "../../bindings/rust/qrvmc-declare" }

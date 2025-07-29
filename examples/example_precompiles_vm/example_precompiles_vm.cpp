@@ -7,16 +7,16 @@
 
 namespace
 {
-zvmc_result execute_identity(const zvmc_message* msg)
+qrvmc_result execute_identity(const qrvmc_message* msg)
 {
-    auto result = zvmc_result{};
+    auto result = qrvmc_result{};
 
     // Check the gas cost.
     auto gas_cost = 15 + 3 * ((int64_t(msg->input_size) + 31) / 32);
     auto gas_left = msg->gas - gas_cost;
     if (gas_left < 0)
     {
-        result.status_code = ZVMC_OUT_OF_GAS;
+        result.status_code = QRVMC_OUT_OF_GAS;
         return result;
     }
 
@@ -25,34 +25,34 @@ zvmc_result execute_identity(const zvmc_message* msg)
     std::copy_n(msg->input_data, msg->input_size, data);
 
     // Return the result.
-    result.status_code = ZVMC_SUCCESS;
+    result.status_code = QRVMC_SUCCESS;
     result.output_data = data;
     result.output_size = msg->input_size;
-    result.release = [](const zvmc_result* r) { delete[] r->output_data; };
+    result.release = [](const qrvmc_result* r) { delete[] r->output_data; };
     result.gas_left = gas_left;
     return result;
 }
 
-zvmc_result execute_empty(const zvmc_message* msg)
+qrvmc_result execute_empty(const qrvmc_message* msg)
 {
-    auto result = zvmc_result{};
-    result.status_code = ZVMC_SUCCESS;
+    auto result = qrvmc_result{};
+    result.status_code = QRVMC_SUCCESS;
     result.gas_left = msg->gas;
     return result;
 }
 
-zvmc_result not_implemented()
+qrvmc_result not_implemented()
 {
-    auto result = zvmc_result{};
-    result.status_code = ZVMC_REJECTED;
+    auto result = qrvmc_result{};
+    result.status_code = QRVMC_REJECTED;
     return result;
 }
 
-zvmc_result execute(zvmc_vm* /*vm*/,
-                    const zvmc_host_interface* /*host*/,
-                    zvmc_host_context* /*context*/,
-                    enum zvmc_revision /*rev*/,
-                    const zvmc_message* msg,
+qrvmc_result execute(qrvmc_vm* /*vm*/,
+                    const qrvmc_host_interface* /*host*/,
+                    qrvmc_host_context* /*context*/,
+                    enum qrvmc_revision /*rev*/,
+                    const qrvmc_message* msg,
                     const uint8_t* /*code*/,
                     size_t /*code_size*/)
 {
@@ -60,14 +60,14 @@ zvmc_result execute(zvmc_vm* /*vm*/,
     // the range 0 - Zffff (2 bytes) of addresses reserved for precompiled contracts.
     // Check if the code address is within the reserved range.
 
-    constexpr auto prefix_size = sizeof(zvmc_address) - 2;
+    constexpr auto prefix_size = sizeof(qrvmc_address) - 2;
     const auto& addr = msg->code_address;
     // Check if the address prefix is all zeros.
     if (std::any_of(&addr.bytes[0], &addr.bytes[prefix_size], [](uint8_t x) { return x != 0; }))
     {
         // If not, reject the execution request.
-        auto result = zvmc_result{};
-        result.status_code = ZVMC_REJECTED;
+        auto result = qrvmc_result{};
+        result.status_code = QRVMC_REJECTED;
         return result;
     }
 
@@ -92,15 +92,15 @@ zvmc_result execute(zvmc_vm* /*vm*/,
 }
 }  // namespace
 
-zvmc_vm* zvmc_create_example_precompiles_vm()
+qrvmc_vm* qrvmc_create_example_precompiles_vm()
 {
-    static struct zvmc_vm vm = {
-        ZVMC_ABI_VERSION,
+    static struct qrvmc_vm vm = {
+        QRVMC_ABI_VERSION,
         "example_precompiles_vm",
         PROJECT_VERSION,
-        [](zvmc_vm*) {},
+        [](qrvmc_vm*) {},
         execute,
-        [](zvmc_vm*) { return zvmc_capabilities_flagset{ZVMC_CAPABILITY_PRECOMPILES}; },
+        [](qrvmc_vm*) { return qrvmc_capabilities_flagset{QRVMC_CAPABILITY_PRECOMPILES}; },
         nullptr,
     };
     return &vm;

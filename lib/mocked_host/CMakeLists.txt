@@ -3,11 +3,11 @@
 # Licensed under the Apache License, Version 2.0.
 
 add_library(mocked_host INTERFACE)
-target_sources(mocked_host INTERFACE $<BUILD_INTERFACE:${ZVMC_INCLUDE_DIR}/zvmc/mocked_host.hpp>)
+target_sources(mocked_host INTERFACE $<BUILD_INTERFACE:${QRVMC_INCLUDE_DIR}/qrvmc/mocked_host.hpp>)
 
-add_library(zvmc::mocked_host ALIAS mocked_host)
-target_link_libraries(mocked_host INTERFACE zvmc::zvmc_cpp)
+add_library(qrvmc::mocked_host ALIAS mocked_host)
+target_link_libraries(mocked_host INTERFACE qrvmc::qrvmc_cpp)
 
-if(ZVMC_INSTALL)
-    install(TARGETS mocked_host EXPORT zvmcTargets)
+if(QRVMC_INSTALL)
+    install(TARGETS mocked_host EXPORT qrvmcTargets)
 endif()

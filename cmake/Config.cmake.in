@@ -1,6 +1,6 @@
 @PACKAGE_INIT@
 
-include(${CMAKE_CURRENT_LIST_DIR}/zvmcTargets.cmake)
-check_required_components(zvmc)
+include(${CMAKE_CURRENT_LIST_DIR}/qrvmcTargets.cmake)
+check_required_components(qrvmc)
 
-include(${CMAKE_CURRENT_LIST_DIR}/ZVMC.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/QRVMC.cmake)

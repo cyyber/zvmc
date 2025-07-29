@@ -1,10 +1,10 @@
-Integration test for ZVMC Go module
+Integration test for QRVMC Go module
 
 Usage:
 
-    go mod init zvmc.theqrl.org/zvmc_use
+    go mod init qrvmc.theqrl.org/qrvmc_use
     // TODO(now.youtrack.cloud/issue/TE-11)
-    go get github.com/rgeraldes24/zvmc/v10@<commit-hash-to-be-tested>
+    go get github.com/rgeraldes24/qrvmc/v10@<commit-hash-to-be-tested>
     go mod tidy
     gcc -shared -I../../include ../../examples/example_vm/example_vm.cpp -o example-vm.so
     go test

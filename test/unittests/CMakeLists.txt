@@ -8,11 +8,11 @@ hunter_add_package(GTest)
 find_package(GTest CONFIG REQUIRED)
 
 add_library(loader-mocked STATIC ${PROJECT_SOURCE_DIR}/lib/loader/loader.c)
-target_link_libraries(loader-mocked PRIVATE zvmc::zvmc)
-target_compile_definitions(loader-mocked PRIVATE ZVMC_LOADER_MOCK=1)
+target_link_libraries(loader-mocked PRIVATE qrvmc::qrvmc)
+target_compile_definitions(loader-mocked PRIVATE QRVMC_LOADER_MOCK=1)
 
 add_executable(
-    zvmc-unittests
+    qrvmc-unittests
     cpp_test.cpp
     example_vm_test.cpp
     helpers_test.cpp
@@ -26,22 +26,22 @@ add_executable(
 )
 
 target_link_libraries(
-    zvmc-unittests
+    qrvmc-unittests
     PRIVATE
     loader-mocked
-    zvmc::example-vm-static
-    zvmc::example-precompiles-vm-static
-    zvmc::instructions
-    zvmc::zvmc_cpp
-    zvmc::tooling
+    qrvmc::example-vm-static
+    qrvmc::example-precompiles-vm-static
+    qrvmc::instructions
+    qrvmc::qrvmc_cpp
+    qrvmc::tooling
     GTest::gtest_main
 )
-target_include_directories(zvmc-unittests PRIVATE ${PROJECT_SOURCE_DIR})
+target_include_directories(qrvmc-unittests PRIVATE ${PROJECT_SOURCE_DIR})
 target_compile_options(
-    zvmc-unittests PRIVATE
+    qrvmc-unittests PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:-wd4068> # allow unknown pragma
 )
 
-gtest_add_tests(TARGET zvmc-unittests TEST_PREFIX ${PROJECT_NAME}/unittests/ TEST_LIST unittests)
+gtest_add_tests(TARGET qrvmc-unittests TEST_PREFIX ${PROJECT_NAME}/unittests/ TEST_LIST unittests)
 
 set_tests_properties(${unittests} PROPERTIES ENVIRONMENT LLVM_PROFILE_FILE=${CMAKE_BINARY_DIR}/unittests-%p.profraw)

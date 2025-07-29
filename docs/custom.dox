@@ -1,15 +1,15 @@
 /**
- * @defgroup cpp ZVMC C++
- * @copydoc zvmc
+ * @defgroup cpp QRVMC C++
+ * @copydoc qrvmc
  */
 
 /**
- * @file zvmc.h
- * @copydoc ZVMC
+ * @file qrvmc.h
+ * @copydoc QRVMC
  */
 
 /**
- * @file zvmc.hpp
+ * @file qrvmc.hpp
  * @copydoc cpp
  */
 
