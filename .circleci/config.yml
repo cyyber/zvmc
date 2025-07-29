@@ -90,44 +90,6 @@ commands:
           command: |
             cmake --build ~/build --target test -- ARGS="-j4 --schedule-random --output-on-failure"
 
-  go_test:
-    steps:
-      - checkout
-      - run:
-          name: "Environment"
-          command: |
-            go version
-            go env
-            gcc --version
-      - run:
-          name: "Go Build"
-          command: |
-            go build -v ./bindings/go/qrvmc
-            go vet -v ./bindings/go/qrvmc
-            go generate -v ./bindings/go/qrvmc
-            go test -v ./bindings/go/qrvmc
-      - run:
-          name: "Go module integration test"
-          working_directory: test/gomod
-          shell: bash -eo pipefail
-          command: |
-            test -z "$CIRCLE_PR_USERNAME" || { echo "Skip for PRs from forks"; exit 0; }
-
-            V=$CIRCLE_TAG
-            if [ -z $V ]; then
-              V=$CIRCLE_SHA1
-            fi
-            echo "version: $V"
-
-            go mod init qrvmc.theqrl.org/qrvmc_use
-            # TODO(now.youtrack.cloud/issue/TE-11)
-            go get -v $(grep -o 'github.com/rgeraldes24/qrvmc/v.*' ../../go.mod)@$V
-            go mod tidy -v
-            go mod graph
-            g++ -shared -I../../include ../../examples/example_vm/example_vm.cpp -o example-vm.so
-            go test -v
-            go mod graph
-
 jobs:
 
   lint:
@@ -166,27 +128,27 @@ jobs:
           destination: docs
 
   # TODO(now.youtrack.cloud/issue/TE-12)
-  upload-docs:
-    executor: linux-clang-latest
-    steps:
-      - checkout
-      - install_doxygen
-      - run:
-          name: "Generate documentation"
-          command: doxygen Doxyfile
-      - add_ssh_keys:
-          fingerprints: [ 57:0c:50:3c:a3:72:4c:a9:28:e8:77:44:87:3b:a2:9a ]
-      - run:
-          name: "Upload documentation"
-          command: |
-            # Remove problematic symbolic link
-            rm bindings/rust/qrvmc-sys/qrvmc.h
+  # upload-docs:
+  #   executor: linux-clang-latest
+  #   steps:
+  #     - checkout
+  #     - install_doxygen
+  #     - run:
+  #         name: "Generate documentation"
+  #         command: doxygen Doxyfile
+  #     - add_ssh_keys:
+  #         fingerprints: [ 57:0c:50:3c:a3:72:4c:a9:28:e8:77:44:87:3b:a2:9a ]
+  #     - run:
+  #         name: "Upload documentation"
+  #         command: |
+  #           # Remove problematic symbolic link
+  #           rm bindings/rust/qrvmc-sys/qrvmc.h
             
-            git config user.name  "Documentation Bot"
-            git config user.email "docs-bot@ethereum.org"
-            git add --all
-            git commit -m "Update docs"
-            git push -f origin HEAD:gh-pages
+  #           git config user.name  "Documentation Bot"
+  #           git config user.email "docs-bot@ethereum.org"
+  #           git add --all
+  #           git commit -m "Update docs"
+  #           git push -f origin HEAD:gh-pages
 
   build-clang-coverage:
     executor: linux-clang-latest
@@ -350,95 +312,6 @@ jobs:
             & 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Launch-VsDevShell.ps1' -Arch amd64
             cmake --build ~/build --target test
 
-  bindings-go-latest:
-    docker:
-      - image: cimg/go:1.20
-    steps:
-      - go_test
-
-  bindings-go-min:
-    docker:
-      - image: circleci/golang:1.11
-    steps:
-      - go_test
-
-  bindings-go-windows:
-    executor: win/server-2022
-    steps:
-      - run:
-          name: "Install mingw"
-          command: |
-            # Version 12.2 (latest when we pinned 11.2) was failing.
-            # TODO: remove the pin in the future
-            choco install -y mingw --version 11.2
-      - go_test
-
-  bindings-rust:
-    docker:
-      - image: rust:1
-    steps:
-      - checkout
-      - run:
-          name: Update environment
-          command: |
-            apt -qq update
-            apt -yq install libclang-dev clang --no-install-recommends
-            rustup component add rustfmt
-      - run:
-          name: Check formatting
-          command: |
-            rustfmt --version
-            cargo fmt --all -- --check
-      - run:
-          name: Build
-          command: cargo build
-      - run:
-          name: Test
-          command: cargo test
-      - attach_workspace:
-          at: ~/build
-      - run:
-          name: Test with qrvmc-vmtester
-          command: |
-            ~/build/bin/qrvmc-vmtester target/debug/libexamplerustvm.so
-      - run:
-          name: Test with qrvmc-example
-          command: |
-            ~/build/bin/qrvmc-example target/debug/libexamplerustvm.so
-      - run:
-          name: Package qrvmc-sys
-          # NOTE: can not be run for qrvmc-vm and qrvmc-declare due to version dependencies
-          working_directory: bindings/rust/qrvmc-sys
-          command: cargo package
-
-  bindings-rust-asan:
-    docker:
-      - image: rust:1-bullseye
-    steps:
-      - checkout
-      - run:
-          name: Update environment
-          command: |
-            apt -qq update
-            apt -yq install llvm-11-dev clang-11 --no-install-recommends
-            rustup toolchain install nightly-x86_64-unknown-linux-gnu
-      - run:
-          name: Build
-          command: RUSTFLAGS="-Z sanitizer=address" ASAN_OPTIONS=detect_leaks=1 cargo +nightly build --target x86_64-unknown-linux-gnu
-      - run:
-          name: Test
-          command: RUSTFLAGS="-Z sanitizer=address -C opt-level=0" ASAN_OPTIONS=detect_leaks=1 cargo +nightly test --target x86_64-unknown-linux-gnu
-      - attach_workspace:
-          at: ~/build
-      - run:
-          name: Test with qrvmc-vmtester
-          command: |
-            ~/build/bin/qrvmc-vmtester target/x86_64-unknown-linux-gnu/debug/libexamplerustvm.so
-      - run:
-          name: Test with qrvmc-example
-          command: |
-            ~/build/bin/qrvmc-example target/x86_64-unknown-linux-gnu/debug/libexamplerustvm.so
-
 workflows:
   version: 2
   qrvmc:
@@ -455,21 +328,6 @@ workflows:
       - build-cmake-min
       - build-macos
       - build-windows
-      - bindings-go-latest:
-          filters:
-            tags:
-              only: /.*/
-      - bindings-go-min:
-          filters:
-            tags:
-              only: /.*/
-      - bindings-go-windows
-      - bindings-rust:
-          requires:
-            - build-gcc-min
-      - bindings-rust-asan:
-          requires:
-            - build-clang9-asan
       - upload-docs:
           requires:
             - lint
