@@ -6,7 +6,7 @@ use core::str::FromStr;
 use qrvmc_declare::qrvmc_declare_vm;
 use qrvmc_vm::*;
 
-#[qrvmc_declare_vm("ExampleRustVM", "qrvm, precompiles", "10.1.0")]
+#[qrvmc_declare_vm("ExampleRustVM", "qrvm, precompiles", "1.0.0")]
 pub struct ExampleRustVM {
     verbosity: i8,
 }

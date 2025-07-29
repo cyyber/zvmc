@@ -4,7 +4,7 @@
 
 [package]
 name = "qrvmc-vm"
-version = "10.1.0"
+version = "1.0.0"
 authors = ["Alex Beregszaszi <alex@rtfs.hu>", "Jake Lang <jak3lang@gmail.com>"]
 license = "Apache-2.0"
 # TODO(now.youtrack.cloud/issue/TE-11)
@@ -13,4 +13,4 @@ description = "Bindings to QRVMC (VM specific)"
 edition = "2018"
 
 [dependencies]
-qrvmc-sys = { path = "../qrvmc-sys", version = "10.1.0" }
+qrvmc-sys = { path = "../qrvmc-sys", version = "1.0.0" }

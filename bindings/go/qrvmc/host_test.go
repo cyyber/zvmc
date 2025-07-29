@@ -86,7 +86,7 @@ func TestGetBlockNumberFromTxContext(t *testing.T) {
 
 	// Should return value 42 (0x2a) as defined in GetTxContext().
 	expectedOutput := []byte("\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x2a")
-	if bytes.Compare(output, expectedOutput) != 0 {
+	if !bytes.Equal(output, expectedOutput) {
 		t.Errorf("execution unexpected output: %x", output)
 	}
 	if gasLeft != 94 {
@@ -112,7 +112,7 @@ func TestCall(t *testing.T) {
 	if len(output) != 34 {
 		t.Errorf("execution unexpected output length: %d", len(output))
 	}
-	if bytes.Compare(output, []byte("output from testHostContext.Call()")) != 0 {
+	if !bytes.Equal(output, []byte("output from testHostContext.Call()")) {
 		t.Errorf("execution unexpected output: %s", output)
 	}
 	if gasLeft != 89 {

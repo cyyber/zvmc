@@ -4,7 +4,7 @@ Usage:
 
     go mod init qrvmc.theqrl.org/qrvmc_use
     // TODO(now.youtrack.cloud/issue/TE-11)
-    go get github.com/rgeraldes24/qrvmc/v10@<commit-hash-to-be-tested>
+    go get github.com/rgeraldes24/qrvmc/v1@<commit-hash-to-be-tested>
     go mod tidy
     gcc -shared -I../../include ../../examples/example_vm/example_vm.cpp -o example-vm.so
     go test

@@ -4,7 +4,7 @@
 
 [package]
 name = "qrvmc-declare"
-version = "10.1.0"
+version = "1.0.0"
 authors = ["Jake Lang <jak3lang@gmail.com>", "Alex Beregszaszi <alex@rtfs.hu>"]
 license = "Apache-2.0"
 # TODO(now.youtrack.cloud/issue/TE-11)
@@ -18,7 +18,7 @@ heck = "0.3.1"
 proc-macro2 = "1.0"
 syn = { version = "1.0", features = ["full"] }
 # For documentation examples
-qrvmc-vm = { path = "../qrvmc-vm", version = "10.1.0" }
+qrvmc-vm = { path = "../qrvmc-vm", version = "1.0.0" }
 
 [lib]
 proc-macro = true

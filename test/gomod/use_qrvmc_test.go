@@ -3,7 +3,7 @@ package qrvmc_use
 import (
 	"testing"
 
-	"github.com/rgeraldes24/qrvmc/v10/bindings/go/qrvmc"
+	"github.com/rgeraldes24/qrvmc/v1/bindings/go/qrvmc"
 )
 
 var exampleVmPath = "./example-vm.so"

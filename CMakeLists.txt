@@ -2,11 +2,8 @@
 # Copyright 2016 The EVMC Authors.
 # Licensed under the Apache License, Version 2.0.
 
-cmake_minimum_required(VERSION 3.16...3.24)
+cmake_minimum_required(VERSION 3.16...3.27)
 
-if(POLICY CMP0074)
-    cmake_policy(SET CMP0074 NEW)
-endif()
 
 if(TARGET qrvmc)
     # The qrvmc library has been already created (probably by other submodule).
@@ -42,7 +39,7 @@ endif()
 cable_set_build_type(DEFAULT Release CONFIGURATION_TYPES Debug Release)
 
 project(qrvmc)
-set(PROJECT_VERSION 10.1.0)
+set(PROJECT_VERSION 1.0.0)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 

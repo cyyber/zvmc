@@ -49,8 +49,8 @@ func TestExecuteEmptyCode(t *testing.T) {
 	h := Hash{}
 	output, gasLeft, err := vm.Execute(nil, Shanghai, Call, false, 1, 999, addr, addr, nil, h, nil)
 
-	if bytes.Compare(output, []byte("")) != 0 {
-		t.Errorf("execution unexpected output: %x", output)
+	if !bytes.Equal(result.Output, []byte("")) {
+		t.Errorf("execution unexpected output: %x", result.Output)
 	}
 	if gasLeft != 999 {
 		t.Errorf("execution gas left is incorrect: %d", gasLeft)

@@ -4,7 +4,7 @@
 
 [package]
 name = "qrvmc-declare-tests"
-version = "10.1.0"
+version = "1.0.0"
 authors = ["Jake Lang <jak3lang@gmail.com>"]
 license = "Apache-2.0"
 # TODO(now.youtrack.cloud/issue/TE-11)
