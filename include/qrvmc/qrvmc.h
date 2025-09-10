@@ -1,5 +1,5 @@
 /**
- * QRVMC: QRL Client-VM Connector API
+ * QRVMC: Quantum Resistant Client-VM Connector API
  *
  * @copyright
  * Copyright 2016 The EVMC Authors.
