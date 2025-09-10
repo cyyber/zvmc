@@ -2,11 +2,11 @@
 // Copyright 2022 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 
-#include <zvmc/filter_iterator.hpp>
+#include <qrvmc/filter_iterator.hpp>
 #include <gtest/gtest.h>
 #include <cctype>
 
-using zvmc::skip_space_iterator;
+using qrvmc::skip_space_iterator;
 
 namespace
 {
@@ -34,7 +34,7 @@ TEST(filter_iterator, filter_positive_integers)
     std::vector<int> in{1, 0, 0, 2, -3, 3, 4, 5, 0, 6, 7, -1, -2, 0, 8, 9, -10};
     std::vector<int> out;
 
-    using iter = zvmc::filter_iterator<std::vector<int>::const_iterator, is_positive>;
+    using iter = qrvmc::filter_iterator<std::vector<int>::const_iterator, is_positive>;
     std::copy(iter{in.begin(), in.end()}, iter{in.end(), in.end()}, std::back_inserter(out));
     ASSERT_EQ(out.size(), 9u);
     EXPECT_EQ(out[0], 1);
@@ -88,7 +88,7 @@ TEST(skip_space_iterator, isspace)
     for (int i = int{std::numeric_limits<char>::min()}; i <= std::numeric_limits<char>::max(); ++i)
     {
         const auto c = static_cast<char>(i);
-        EXPECT_EQ(zvmc::isspace(c), (std::isspace(c) != 0));
+        EXPECT_EQ(qrvmc::isspace(c), (std::isspace(c) != 0));
         switch (c)
         {
         case ' ':
@@ -97,10 +97,10 @@ TEST(skip_space_iterator, isspace)
         case '\r':
         case '\t':
         case '\v':
-            EXPECT_TRUE(zvmc::isspace(c));
+            EXPECT_TRUE(qrvmc::isspace(c));
             break;
         default:
-            EXPECT_FALSE(zvmc::isspace(c));
+            EXPECT_FALSE(qrvmc::isspace(c));
             break;
         }
     }

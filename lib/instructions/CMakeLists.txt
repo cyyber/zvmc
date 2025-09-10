@@ -4,20 +4,20 @@
 
 add_library(
     instructions STATIC
-    ${ZVMC_INCLUDE_DIR}/zvmc/instructions.h
+    ${QRVMC_INCLUDE_DIR}/qrvmc/instructions.h
     instruction_metrics.c
     instruction_names.c
 )
 
-add_library(zvmc::instructions ALIAS instructions)
+add_library(qrvmc::instructions ALIAS instructions)
 set_target_properties(instructions PROPERTIES
-    OUTPUT_NAME zvmc-instructions
+    OUTPUT_NAME qrvmc-instructions
     POSITION_INDEPENDENT_CODE TRUE
 )
 target_include_directories(instructions PUBLIC
-    $<BUILD_INTERFACE:${ZVMC_INCLUDE_DIR}>$<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${QRVMC_INCLUDE_DIR}>$<INSTALL_INTERFACE:include>
 )
 
-if(ZVMC_INSTALL)
-    install(TARGETS instructions EXPORT zvmcTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+if(QRVMC_INSTALL)
+    install(TARGETS instructions EXPORT qrvmcTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()

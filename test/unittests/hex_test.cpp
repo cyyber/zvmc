@@ -2,10 +2,10 @@
 // Copyright 2021 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 
-#include <zvmc/hex.hpp>
+#include <qrvmc/hex.hpp>
 #include <gtest/gtest.h>
 
-using namespace zvmc;
+using namespace qrvmc;
 
 TEST(hex, hex_of_byte)
 {
@@ -96,10 +96,10 @@ TEST(hex, from_hex_to_custom_type)
         uint8_t bytes[4];
     };
     constexpr auto test = [](std::string_view in) {
-        return zvmc::hex({zvmc::from_hex<X>(in).value().bytes, sizeof(X)});
+        return qrvmc::hex({qrvmc::from_hex<X>(in).value().bytes, sizeof(X)});
     };
 
-    static_assert(zvmc::from_hex<X>("01").value().bytes[3] == 0x01);  // Works in constexpr.
+    static_assert(qrvmc::from_hex<X>("01").value().bytes[3] == 0x01);  // Works in constexpr.
 
     EXPECT_EQ(test("f1f2f3f4"), "f1f2f3f4");
     EXPECT_EQ(test("01020304"), "01020304");
@@ -114,19 +114,19 @@ TEST(hex, from_hex_to_custom_type)
     EXPECT_EQ(test("0x01"), "00000001");
     EXPECT_EQ(test("0x"), "00000000");
 
-    EXPECT_FALSE(zvmc::from_hex<X>("0"));
-    EXPECT_FALSE(zvmc::from_hex<X>("1"));
-    EXPECT_FALSE(zvmc::from_hex<X>("0x "));
-    EXPECT_FALSE(zvmc::from_hex<X>("0xf"));
-    EXPECT_FALSE(zvmc::from_hex<X>("0x 00"));
-    EXPECT_FALSE(zvmc::from_hex<X>("1x"));
-    EXPECT_FALSE(zvmc::from_hex<X>("1x00"));
-    EXPECT_FALSE(zvmc::from_hex<X>("fx"));
-    EXPECT_FALSE(zvmc::from_hex<X>("fx00"));
+    EXPECT_FALSE(qrvmc::from_hex<X>("0"));
+    EXPECT_FALSE(qrvmc::from_hex<X>("1"));
+    EXPECT_FALSE(qrvmc::from_hex<X>("0x "));
+    EXPECT_FALSE(qrvmc::from_hex<X>("0xf"));
+    EXPECT_FALSE(qrvmc::from_hex<X>("0x 00"));
+    EXPECT_FALSE(qrvmc::from_hex<X>("1x"));
+    EXPECT_FALSE(qrvmc::from_hex<X>("1x00"));
+    EXPECT_FALSE(qrvmc::from_hex<X>("fx"));
+    EXPECT_FALSE(qrvmc::from_hex<X>("fx00"));
 
     // The result type is too small for the input.
-    EXPECT_FALSE(zvmc::from_hex<X>("0000000000"));
-    EXPECT_FALSE(zvmc::from_hex<X>("0x0000000000"));
+    EXPECT_FALSE(qrvmc::from_hex<X>("0000000000"));
+    EXPECT_FALSE(qrvmc::from_hex<X>("0x0000000000"));
 }
 
 
@@ -137,25 +137,25 @@ TEST(hex, from_prefixed_hex_to_custom_type)
         uint8_t bytes[4];
     };
     constexpr auto test = [](std::string_view in) {
-        return zvmc::hex({zvmc::from_prefixed_hex<X>(in, "Z").value().bytes, sizeof(X)});
+        return qrvmc::hex({qrvmc::from_prefixed_hex<X>(in, "Q").value().bytes, sizeof(X)});
     };
-    static_assert(zvmc::from_prefixed_hex<X>("Z01", "Z").value().bytes[3] == 0x01);  // Works in
-                                                                                     // constexpr.
-    EXPECT_EQ(test("Z01020304"), "01020304");
-    EXPECT_EQ(test("Z010203"), "00010203");
-    EXPECT_EQ(test("Z0102"), "00000102");
-    EXPECT_EQ(test("Z01"), "00000001");
-    EXPECT_EQ(test("Z"), "00000000");
-    EXPECT_FALSE(zvmc::from_prefixed_hex<X>("0", "Z"));
-    EXPECT_FALSE(zvmc::from_prefixed_hex<X>("1", "Z"));
-    EXPECT_FALSE(zvmc::from_prefixed_hex<X>("Z ", "Z"));
-    EXPECT_FALSE(zvmc::from_prefixed_hex<X>("Zf", "Z"));
-    EXPECT_FALSE(zvmc::from_prefixed_hex<X>("Z 00", "Z"));
-    EXPECT_FALSE(zvmc::from_prefixed_hex<X>("1x", "Z"));
-    EXPECT_FALSE(zvmc::from_prefixed_hex<X>("1Z0", "Z"));
-    EXPECT_FALSE(zvmc::from_prefixed_hex<X>("fx", "Z"));
-    EXPECT_FALSE(zvmc::from_prefixed_hex<X>("fZ0", "Z"));
-    EXPECT_FALSE(zvmc::from_prefixed_hex<X>("f1f2f3f4", "Z"));
+    static_assert(qrvmc::from_prefixed_hex<X>("Q01", "Q").value().bytes[3] == 0x01);  // Works in
+                                                                                      // constexpr.
+    EXPECT_EQ(test("Q01020304"), "01020304");
+    EXPECT_EQ(test("Q010203"), "00010203");
+    EXPECT_EQ(test("Q0102"), "00000102");
+    EXPECT_EQ(test("Q01"), "00000001");
+    EXPECT_EQ(test("Q"), "00000000");
+    EXPECT_FALSE(qrvmc::from_prefixed_hex<X>("0", "Q"));
+    EXPECT_FALSE(qrvmc::from_prefixed_hex<X>("1", "Q"));
+    EXPECT_FALSE(qrvmc::from_prefixed_hex<X>("Q ", "Q"));
+    EXPECT_FALSE(qrvmc::from_prefixed_hex<X>("Qf", "Q"));
+    EXPECT_FALSE(qrvmc::from_prefixed_hex<X>("Q 00", "Q"));
+    EXPECT_FALSE(qrvmc::from_prefixed_hex<X>("1x", "Q"));
+    EXPECT_FALSE(qrvmc::from_prefixed_hex<X>("1Q0", "Q"));
+    EXPECT_FALSE(qrvmc::from_prefixed_hex<X>("fx", "Q"));
+    EXPECT_FALSE(qrvmc::from_prefixed_hex<X>("fQ0", "Q"));
+    EXPECT_FALSE(qrvmc::from_prefixed_hex<X>("f1f2f3f4", "Q"));
     // The result type is too small for the input.
-    EXPECT_FALSE(zvmc::from_prefixed_hex<X>("Z0000000000", "Z"));
+    EXPECT_FALSE(qrvmc::from_prefixed_hex<X>("Q0000000000", "Q"));
 }

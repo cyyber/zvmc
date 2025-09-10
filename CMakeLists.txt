@@ -2,14 +2,11 @@
 # Copyright 2016 The EVMC Authors.
 # Licensed under the Apache License, Version 2.0.
 
-cmake_minimum_required(VERSION 3.16...3.24)
+cmake_minimum_required(VERSION 3.16...3.27)
 
-if(POLICY CMP0074)
-    cmake_policy(SET CMP0074 NEW)
-endif()
 
-if(TARGET zvmc)
-    # The zvmc library has been already created (probably by other submodule).
+if(TARGET qrvmc)
+    # The qrvmc library has been already created (probably by other submodule).
     return()
 endif()
 
@@ -20,19 +17,17 @@ include(CablePackage)
 include(CMakeDependentOption)
 include(CMakePackageConfigHelpers)
 
-option(ZVMC_JAVA "Enable building Java Native Interface (JNI) bindings" OFF)
+option(QRVMC_INSTALL "Enable QRVMC installation (e.g. make install)" ON)
 
-option(ZVMC_INSTALL "Enable ZVMC installation (e.g. make install)" ON)
+option(QRVMC_TESTING "Build everything (libraries, tools, examples, internal tests)" OFF)
 
-option(ZVMC_TESTING "Build everything (libraries, tools, examples, internal tests)" OFF)
+cmake_dependent_option(QRVMC_TOOLS "Build QRVMC tools" OFF
+    "NOT QRVMC_TESTING" ON)
 
-cmake_dependent_option(ZVMC_TOOLS "Build ZVMC tools" OFF
-    "NOT ZVMC_TESTING" ON)
+cmake_dependent_option(QRVMC_EXAMPLES "Build QRVMC examples" OFF
+    "NOT QRVMC_TESTING" ON)
 
-cmake_dependent_option(ZVMC_EXAMPLES "Build ZVMC examples" OFF
-    "NOT ZVMC_TESTING" ON)
-
-option(HUNTER_ENABLED "Enable Hunter package manager support" ${ZVMC_TOOLS})
+option(HUNTER_ENABLED "Enable Hunter package manager support" ${QRVMC_TOOLS})
 
 if(HUNTER_ENABLED)
     set(HUNTER_CONFIGURATION_TYPES Release CACHE STRING "Build type of Hunter packages")
@@ -43,8 +38,8 @@ endif()
 
 cable_set_build_type(DEFAULT Release CONFIGURATION_TYPES Debug Release)
 
-project(zvmc)
-set(PROJECT_VERSION 10.1.0)
+project(qrvmc)
+set(PROJECT_VERSION 1.0.0)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -78,49 +73,45 @@ elseif(CABLE_COMPILER_GNU)
     set(CMAKE_CXX_FLAGS_COVERAGE "--coverage")
 endif()
 
-set(ZVMC_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+set(QRVMC_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 
 add_subdirectory(lib)
 
-if(ZVMC_JAVA)
-    add_subdirectory(bindings/java)
-endif()
-
-if(ZVMC_TOOLS)
+if(QRVMC_TOOLS)
     add_subdirectory(tools)
 endif()
 
-if(ZVMC_EXAMPLES)
+if(QRVMC_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-if(ZVMC_TESTING)
+if(QRVMC_TESTING)
     enable_testing()
     add_subdirectory(test)
 endif()
 
-write_basic_package_version_file(zvmcConfigVersion.cmake COMPATIBILITY ExactVersion)
+write_basic_package_version_file(qrvmcConfigVersion.cmake COMPATIBILITY ExactVersion)
 
 configure_package_config_file(
     cmake/Config.cmake.in
-    zvmcConfig.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zvmc
+    qrvmcConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/qrvmc
 )
 
-if(ZVMC_INSTALL)
-    install(DIRECTORY include/zvmc DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+if(QRVMC_INSTALL)
+    install(DIRECTORY include/qrvmc DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
     install(
-        EXPORT zvmcTargets
-        NAMESPACE zvmc::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zvmc
+        EXPORT qrvmcTargets
+        NAMESPACE qrvmc::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/qrvmc
     )
     install(
         FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/zvmcConfig.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/zvmcConfigVersion.cmake
-        cmake/ZVMC.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zvmc
+        ${CMAKE_CURRENT_BINARY_DIR}/qrvmcConfig.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/qrvmcConfigVersion.cmake
+        cmake/QRVMC.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/qrvmc
     )
 endif()
 
@@ -130,9 +121,6 @@ set(
     /\\\\.idea/
     /build/
     /cmake-build-.*/
-    /bindings/
-    /Cargo.lock
-    /Cargo.toml
     /target/
 )
 cable_add_archive_package()

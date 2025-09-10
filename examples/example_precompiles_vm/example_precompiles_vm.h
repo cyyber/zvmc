@@ -3,17 +3,17 @@
 // Licensed under the Apache License, Version 2.0.
 #pragma once
 
-#include <zvmc/utils.h>
-#include <zvmc/zvmc.h>
+#include <qrvmc/qrvmc.h>
+#include <qrvmc/utils.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * Creates ZVMC Example Precompiles VM.
+ * Creates QRVMC Example Precompiles VM.
  */
-ZVMC_EXPORT struct zvmc_vm* zvmc_create_example_precompiles_vm(void);
+QRVMC_EXPORT struct qrvmc_vm* qrvmc_create_example_precompiles_vm(void);
 
 #ifdef __cplusplus
 }

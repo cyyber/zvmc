@@ -4,17 +4,17 @@
 
 #pragma once
 
-#include <zvmc/utils.h>
-#include <zvmc/zvmc.h>
+#include <qrvmc/qrvmc.h>
+#include <qrvmc/utils.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * Creates ZVMC Example VM.
+ * Creates QRVMC Example VM.
  */
-ZVMC_EXPORT struct zvmc_vm* zvmc_create_example_vm(void);
+QRVMC_EXPORT struct qrvmc_vm* qrvmc_create_example_vm(void);
 
 #ifdef __cplusplus
 }

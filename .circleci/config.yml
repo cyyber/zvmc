@@ -1,0 +1,336 @@
+version: 2.1
+
+orbs:
+  win: circleci/windows@5.0
+
+executors:
+  linux-gcc-latest:
+    docker:
+      - image: ethereum/cpp-build-env:19-gcc-12
+  linux-clang-latest:
+    docker:
+      - image: ethereum/cpp-build-env:19-clang-15
+
+
+commands:
+  install_doxygen:
+    steps:
+      - run:
+          name: "Install doxygen"
+          working_directory: "~"
+          command: |
+            export DOXYGEN_URL=https://www.doxygen.nl/files/doxygen-1.9.6.linux.bin.tar.gz
+            export DOXYGEN_CHECKSUM=8354583f86416586d35397c8ee7e719f5aa5804140af83cf7ba39a8c5076bdb8
+            curl $DOXYGEN_URL | tee >(tar -xz --strip-components=1) | sha256sum --check <(echo $DOXYGEN_CHECKSUM -)
+            sudo ln -s $PWD/bin/doxygen /usr/bin
+  build:
+    parameters:
+      build_type:
+        type: string
+        default: ""
+      toolchain:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: "Environment"
+          command: |
+            CC=${CC:-cc}
+            CXX=${CXX:-cpp}
+            echo CC: $CC
+            echo CXX: $CXX
+            $CC --version
+            $CXX --version
+            cmake --version
+
+            # Create the toolchain.info file for cache key.
+            echo '<<parameters.toolchain>>' >> toolchain.info
+            echo '<<parameters.build_type>>' >> toolchain.info
+            $CXX --version >> toolchain.info
+      - restore_cache:
+          name: "Restore Hunter Cache"
+          key: &hunter-cache-key hunter-{{arch}}-{{checksum "toolchain.info"}}-{{checksum "cmake/Hunter/init.cmake"}}
+      - run:
+          name: "Configure"
+          working_directory: ~/build
+          command: |
+            cmake ../project <<#parameters.build_type>>-DCMAKE_BUILD_TYPE=<<parameters.build_type>><</parameters.build_type>> <<#parameters.toolchain>>-DCMAKE_TOOLCHAIN_FILE=~/project/cmake/cable/toolchains/<<parameters.toolchain>>.cmake<</parameters.toolchain>> -DCMAKE_INSTALL_PREFIX=~/install -DCMAKE_COMPILE_WARNING_AS_ERROR=TRUE -DQRVMC_TESTING=ON $CMAKE_OPTIONS
+      - save_cache:
+          name: "Save Hunter Cache"
+          key: *hunter-cache-key
+          paths:
+            - ~/.hunter/_Base/Cache
+      - run:
+          name: "Build"
+          command: cmake --build ~/build -- -j4
+      - run:
+          name: "Install"
+          command: cmake --build ~/build --target install
+      - run:
+          name: "Package"
+          command: |
+            cmake --build ~/build --target package_source
+            cmake --build ~/build --target package
+            mkdir ~/package
+            mv ~/build/qrvmc-*.tar.gz ~/package
+      - store_artifacts:
+          path: ~/package
+          destination: package
+      - persist_to_workspace:
+          root: ~/build
+          paths:
+            - bin/qrvmc-vmtester
+            - bin/qrvmc-example
+
+  test:
+    steps:
+      - run:
+          name: "Test"
+          command: |
+            cmake --build ~/build --target test -- ARGS="-j4 --schedule-random --output-on-failure"
+
+jobs:
+
+  lint:
+    executor: linux-clang-latest
+    steps:
+      - checkout
+      - run:
+          name: "Check code format"
+          command: |
+            clang-format --version
+            find examples include lib test tools -name '*.hpp' -o -name '*.cpp' -o -name '*.h' -o -name '*.c' | xargs clang-format -i
+            git diff --color --exit-code
+      - run:
+          name: "Run codespell"
+          command: |
+            codespell --quiet-level=4 --ignore-words=./.codespell-whitelist --skip=.git
+      #- run:
+      #    name: "Check bumpversion"
+      #    command: |
+      #      bumpversion --dry-run --verbose major
+      #      bumpversion --dry-run --verbose minor
+      #      bumpversion --dry-run --verbose patch
+      - install_doxygen
+      - run:
+          name: "Test documentation"
+          command: |
+            cat Doxyfile | sed 's/HTML_OUTPUT            = ./HTML_OUTPUT            = ..\/docs/' | doxygen - > doxygen.log 2> doxygen.warnings
+            if [ -s doxygen.warnings ]; then
+              printf '\n\nDoxygen warnings:\n\n'
+              cat doxygen.warnings
+              exit 1
+            fi
+            cat doxygen.log
+      - store_artifacts:
+          path: ~/docs
+          destination: docs
+
+  # TODO(now.youtrack.cloud/issue/TE-12)
+  # upload-docs:
+  #   executor: linux-clang-latest
+  #   steps:
+  #     - checkout
+  #     - install_doxygen
+  #     - run:
+  #         name: "Generate documentation"
+  #         command: doxygen Doxyfile
+  #     - add_ssh_keys:
+  #         fingerprints: [ 57:0c:50:3c:a3:72:4c:a9:28:e8:77:44:87:3b:a2:9a ]
+  #     - run:
+  #         name: "Upload documentation"
+  #         command: |
+  #           # Remove problematic symbolic link
+  #           rm bindings/rust/qrvmc-sys/qrvmc.h
+            
+  #           git config user.name  "Documentation Bot"
+  #           git config user.email "docs-bot@ethereum.org"
+  #           git add --all
+  #           git commit -m "Update docs"
+  #           git push -f origin HEAD:gh-pages
+
+  build-clang-coverage:
+    executor: linux-clang-latest
+    environment:
+      CMAKE_OPTIONS: -DCMAKE_CXX_CLANG_TIDY=clang-tidy -DCMAKE_C_CLANG_TIDY=clang-tidy
+    steps:
+      - checkout
+      - build:
+          build_type: Coverage
+      - test
+      - run:
+          name: "Collect coverage data"
+          working_directory: ~/build
+          command: |
+            find -name '*.profraw'
+            llvm-profdata merge *.profraw -o qrvmc.profdata
+            llvm-cov report -instr-profile qrvmc.profdata \
+              -object bin/qrvmc-unittests \
+              -object bin/qrvmc-vmtester
+            llvm-cov export -instr-profile qrvmc.profdata -format=lcov > qrvmc.lcov \
+              -object bin/qrvmc-unittests \
+              -object bin/qrvmc \
+              -object bin/qrvmc-vmtester
+            genhtml qrvmc.lcov -o coverage -t QRVMC
+      - store_artifacts:
+          path: ~/build/coverage
+          destination: coverage
+      - run:
+          name: "Install codecov"
+          command: |
+            # TODO: This should go to cpp-build-env image
+            gpg --no-default-keyring --keyring trustedkeys.gpg --keyserver keyserver.ubuntu.com --recv-key ED779869
+
+            export CODECOV_VERSION=v0.4.1
+            curl -Os https://uploader.codecov.io/$CODECOV_VERSION/linux/codecov
+            curl -Os https://uploader.codecov.io/$CODECOV_VERSION/linux/codecov.SHA256SUM
+            curl -Os https://uploader.codecov.io/$CODECOV_VERSION/linux/codecov.SHA256SUM.sig
+
+            gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
+            shasum -c codecov.SHA256SUM
+
+            chmod +x codecov
+            sudo mv codecov /usr/local/bin
+      - run:
+          name: "Upload to Codecov"
+          command: |
+            # Convert to relative paths
+            sed -i 's|$(pwd)/||' ~/build/qrvmc.lcov
+            codecov --file ~/build/qrvmc.lcov -X gcov
+
+
+  build-gcc-sanitizers:
+    executor: linux-gcc-latest
+    environment:
+      CMAKE_OPTIONS: -DSANITIZE=address,undefined
+    steps:
+      - checkout
+      - build
+      - test
+
+  build-clang-sanitizers:
+    executor: linux-clang-latest
+    environment:
+      CMAKE_OPTIONS: -DSANITIZE=address,undefined,nullability,implicit-unsigned-integer-truncation,implicit-signed-integer-truncation
+      UBSAN_OPTIONS: halt_on_error=1
+    steps:
+      - checkout
+      - build
+      - test
+
+  build-clang9-asan:
+    docker:
+      - image: ethereum/cpp-build-env:15-clang-9
+    environment:
+      CMAKE_OPTIONS: -DSANITIZE=address
+      UBSAN_OPTIONS: halt_on_error=1
+    steps:
+      - checkout
+      - build
+      - test
+
+  build-gcc-min:
+    docker:
+      - image: ethereum/cpp-build-env:15-gcc-8
+    steps:
+      - checkout
+      - build
+      - test
+
+  build-clang-min:
+    docker:
+      - image: ethereum/cpp-build-env:15-clang-9
+    steps:
+      - checkout
+      - build
+      - test
+
+  build-gcc-32bit:
+    docker:
+      - image: ethereum/cpp-build-env:17-gcc-11-multilib
+    steps:
+      - checkout
+      - build:
+          toolchain: cxx11-32bit
+      - test
+
+  build-cmake-min:
+    docker:
+      - image: cimg/base:stable-20.04
+    steps:
+      - run:
+          name: "Install default CMake"
+          command: sudo apt -q update && sudo apt -qy install cmake
+      - checkout
+      - build
+      - test
+
+  build-macos:
+    resource_class: macos.m1.medium.gen1
+    macos:
+      xcode: 14.3.1
+    steps:
+      - run:
+          name: "Install System Dependencies"
+          command: HOMEBREW_NO_AUTO_UPDATE=1 brew install cmake
+      - checkout
+      - build
+      - test
+
+  build-windows:
+    executor: win/server-2022
+    environment:
+      CMAKE_BUILD_TYPE: Release
+    steps:
+      - checkout
+      - run:
+          name: "Setup environment (bash)"
+          shell: bash
+          command: |
+            echo 'export PATH=$PATH:"/c/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin"' >> $BASH_ENV
+      - run:
+          name: 'Configure'
+          shell: powershell
+          command: |
+            $ErrorActionPreference = "Stop"
+            & 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Launch-VsDevShell.ps1' -Arch amd64
+            which cmake
+            cmake -S . -B ~/build -G Ninja -DCMAKE_COMPILE_WARNING_AS_ERROR=TRUE -DCMAKE_INSTALL_PREFIX=C:\install -DQRVMC_TESTING=ON
+      - run:
+          name: 'Build'
+          shell: powershell
+          command: |
+            $ErrorActionPreference = "Stop"
+            & 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Launch-VsDevShell.ps1' -Arch amd64
+            cmake --build ~/build
+      - run:
+          name: 'Test'
+          shell: powershell
+          command: |
+            $ErrorActionPreference = "Stop"
+            & 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Launch-VsDevShell.ps1' -Arch amd64
+            cmake --build ~/build --target test
+
+workflows:
+  version: 2
+  qrvmc:
+    jobs:
+      - lint
+      - build-clang-coverage
+      # TODO(now.youtrack.cloud/issue/TE-16)
+      #- build-gcc-sanitizers
+      #- build-clang-sanitizers
+      - build-clang9-asan
+      - build-gcc-min
+      - build-clang-min
+      - build-gcc-32bit
+      - build-cmake-min
+      - build-macos
+      - build-windows
+      # - upload-docs:
+      #     requires:
+      #       - lint
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master

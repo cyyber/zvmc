@@ -3,11 +3,11 @@
 // Licensed under the Apache License, Version 2.0.
 
 #include "vmtester.hpp"
-#include <zvmc/loader.h>
-#include <zvmc/zvmc.hpp>
+#include <qrvmc/loader.h>
+#include <qrvmc/qrvmc.hpp>
 #include <iostream>
 
-zvmc::VM zvmc_vm_test::owned_vm;
+qrvmc::VM qrvmc_vm_test::owned_vm;
 
 class cli_parser
 {
@@ -110,20 +110,20 @@ int main(int argc, char* argv[])
     {
         testing::InitGoogleTest(&argc, argv);
 
-        auto cli = cli_parser{"ZVMC VM Tester", PROJECT_VERSION, {"MODULE"}};
+        auto cli = cli_parser{"QRVMC VM Tester", PROJECT_VERSION, {"MODULE"}};
 
         const auto error_code = cli.parse(argc, argv, std::cout, std::cerr);
         if (error_code <= 0)
             return error_code;
 
-        const auto& zvmc_module = cli.arguments[0];
-        std::cout << "Testing " << zvmc_module << "\n";
+        const auto& qrvmc_module = cli.arguments[0];
+        std::cout << "Testing " << qrvmc_module << "\n";
 
-        zvmc_loader_error_code ec = ZVMC_LOADER_UNSPECIFIED_ERROR;
-        auto vm = zvmc::VM{zvmc_load_and_configure(zvmc_module.c_str(), &ec)};
-        if (ec != ZVMC_LOADER_SUCCESS)
+        qrvmc_loader_error_code ec = QRVMC_LOADER_UNSPECIFIED_ERROR;
+        auto vm = qrvmc::VM{qrvmc_load_and_configure(qrvmc_module.c_str(), &ec)};
+        if (ec != QRVMC_LOADER_SUCCESS)
         {
-            const auto error = zvmc_last_error_msg();
+            const auto error = qrvmc_last_error_msg();
             if (error != nullptr)
                 std::cerr << error << "\n";
             else
@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
             return static_cast<int>(ec);
         }
 
-        zvmc_vm_test::set_vm(std::move(vm));
+        qrvmc_vm_test::set_vm(std::move(vm));
 
         std::cout << std::endl;
         return RUN_ALL_TESTS();

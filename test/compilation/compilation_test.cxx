@@ -4,23 +4,23 @@
 
 // Test compilation of C and C++ public headers.
 
-#include <zvmc/zvmc.h>
-#include <zvmc/zvmc.hpp>
-#include <zvmc/filter_iterator.hpp>
-#include <zvmc/helpers.h>
-#include <zvmc/hex.hpp>
-#include <zvmc/instructions.h>
-#include <zvmc/loader.h>
-#include <zvmc/mocked_host.hpp>
-#include <zvmc/utils.h>
+#include <qrvmc/qrvmc.h>
+#include <qrvmc/qrvmc.hpp>
+#include <qrvmc/filter_iterator.hpp>
+#include <qrvmc/helpers.h>
+#include <qrvmc/hex.hpp>
+#include <qrvmc/instructions.h>
+#include <qrvmc/loader.h>
+#include <qrvmc/mocked_host.hpp>
+#include <qrvmc/utils.h>
 
 // Include again to check if headers have proper include guards.
-#include <zvmc/zvmc.h>               //NOLINT(readability-duplicate-include)
-#include <zvmc/zvmc.hpp>             //NOLINT(readability-duplicate-include)
-#include <zvmc/filter_iterator.hpp>  //NOLINT(readability-duplicate-include)
-#include <zvmc/helpers.h>            //NOLINT(readability-duplicate-include)
-#include <zvmc/hex.hpp>              //NOLINT(readability-duplicate-include)
-#include <zvmc/instructions.h>       //NOLINT(readability-duplicate-include)
-#include <zvmc/loader.h>             //NOLINT(readability-duplicate-include)
-#include <zvmc/mocked_host.hpp>      //NOLINT(readability-duplicate-include)
-#include <zvmc/utils.h>              //NOLINT(readability-duplicate-include)
+#include <qrvmc/qrvmc.h>               //NOLINT(readability-duplicate-include)
+#include <qrvmc/qrvmc.hpp>             //NOLINT(readability-duplicate-include)
+#include <qrvmc/filter_iterator.hpp>  //NOLINT(readability-duplicate-include)
+#include <qrvmc/helpers.h>            //NOLINT(readability-duplicate-include)
+#include <qrvmc/hex.hpp>              //NOLINT(readability-duplicate-include)
+#include <qrvmc/instructions.h>       //NOLINT(readability-duplicate-include)
+#include <qrvmc/loader.h>             //NOLINT(readability-duplicate-include)
+#include <qrvmc/mocked_host.hpp>      //NOLINT(readability-duplicate-include)
+#include <qrvmc/utils.h>              //NOLINT(readability-duplicate-include)

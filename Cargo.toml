@@ -1,8 +1,0 @@
-[workspace]
-members = [
-    "bindings/rust/zvmc-sys",
-    "bindings/rust/zvmc-vm",
-    "bindings/rust/zvmc-declare",
-    "bindings/rust/zvmc-declare-tests",
-    "examples/example-rust-vm"
-]

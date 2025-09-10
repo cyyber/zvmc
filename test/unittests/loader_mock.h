@@ -9,49 +9,49 @@
 
 static const int magic_handle = 0xE7AC;
 
-const char* zvmc_test_library_path = NULL;
-const char* zvmc_test_library_symbol = NULL;
-zvmc_create_fn zvmc_test_create_fn = NULL;
+const char* qrvmc_test_library_path = NULL;
+const char* qrvmc_test_library_symbol = NULL;
+qrvmc_create_fn qrvmc_test_create_fn = NULL;
 
-static const char* zvmc_test_last_error_msg = NULL;
+static const char* qrvmc_test_last_error_msg = NULL;
 
-/* Limited variant of strcpy_s(). Exposed to unittests when building with ZVMC_LOADER_MOCK. */
+/* Limited variant of strcpy_s(). Exposed to unittests when building with QRVMC_LOADER_MOCK. */
 int strcpy_sx(char* dest, size_t destsz, const char* src);
 
-static int zvmc_test_load_library(const char* filename)
+static int qrvmc_test_load_library(const char* filename)
 {
-    zvmc_test_last_error_msg = NULL;
-    if (filename && zvmc_test_library_path && strcmp(filename, zvmc_test_library_path) == 0)
+    qrvmc_test_last_error_msg = NULL;
+    if (filename && qrvmc_test_library_path && strcmp(filename, qrvmc_test_library_path) == 0)
         return magic_handle;
-    zvmc_test_last_error_msg = "cannot load library";
+    qrvmc_test_last_error_msg = "cannot load library";
     return 0;
 }
 
-static void zvmc_test_free_library(int handle)
+static void qrvmc_test_free_library(int handle)
 {
     (void)handle;
 }
 
-static zvmc_create_fn zvmc_test_get_symbol_address(int handle, const char* symbol)
+static qrvmc_create_fn qrvmc_test_get_symbol_address(int handle, const char* symbol)
 {
     if (handle != magic_handle)
         return NULL;
 
-    if (zvmc_test_library_symbol && strcmp(symbol, zvmc_test_library_symbol) == 0)
-        return zvmc_test_create_fn;
+    if (qrvmc_test_library_symbol && strcmp(symbol, qrvmc_test_library_symbol) == 0)
+        return qrvmc_test_create_fn;
     return NULL;
 }
 
-static const char* zvmc_test_get_last_error_msg(void)
+static const char* qrvmc_test_get_last_error_msg(void)
 {
     // Return the last error message only once.
-    const char* m = zvmc_test_last_error_msg;
-    zvmc_test_last_error_msg = NULL;
+    const char* m = qrvmc_test_last_error_msg;
+    qrvmc_test_last_error_msg = NULL;
     return m;
 }
 
 #define DLL_HANDLE int
-#define DLL_OPEN(filename) zvmc_test_load_library(filename)
-#define DLL_CLOSE(handle) zvmc_test_free_library(handle)
-#define DLL_GET_CREATE_FN(handle, name) zvmc_test_get_symbol_address(handle, name)
-#define DLL_GET_ERROR_MSG() zvmc_test_get_last_error_msg()
+#define DLL_OPEN(filename) qrvmc_test_load_library(filename)
+#define DLL_CLOSE(handle) qrvmc_test_free_library(handle)
+#define DLL_GET_CREATE_FN(handle, name) qrvmc_test_get_symbol_address(handle, name)
+#define DLL_GET_ERROR_MSG() qrvmc_test_get_last_error_msg()
