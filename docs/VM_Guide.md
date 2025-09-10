@@ -1,6 +1,6 @@
 # QRVMC VM Implementation Guide {#vmguide}
 
-> How to add QRVMC interface to Your QRL VM implementation.
+> How to add QRVMC interface to Your Quantum Resistant VM implementation.
 
 ## An example
 
